@@ -12,8 +12,12 @@
     "backgroundColor": "#08080a"
   },
   "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#08080a"
+    },
     "SystemBars": {
-      "style": "LIGHT"
+      "style": "DARK"
     }
   }
 }
