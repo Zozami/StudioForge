@@ -91,6 +91,14 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--text-muted);"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
           </div>
+
+          <!-- Minimalist Footer with Version Indicator -->
+          <div style="margin-top: 28px; margin-bottom: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;">
+            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 600; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-card);">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #34d399;"></span>
+              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.2</strong></span>
+            </div>
+          </div>
         </section>
 
         <!-- ====================================================================
@@ -442,6 +450,28 @@
             </div>
           </div>
         </div>
+      <!-- ======================================================================
+           BOTTOM SHEET 6: UPDATE LOADER & PROGRESS MODAL
+           ====================================================================== -->
+      <div id="sheet-update-progress" class="mobile-sheet-backdrop" onclick="handleBackdropClick(event, 'sheet-update-progress')">
+        <div class="mobile-bottom-sheet" onclick="event.stopPropagation()">
+          <div class="sheet-handle-bar"></div>
+          <div class="dialog-content-box" style="text-align: center; padding: 12px 6px;">
+            <div class="dialog-icon-circle" id="update-spinner-circle" style="background: rgba(255, 0, 51, 0.12); color: var(--yt-red); margin: 0 auto 10px auto;">
+              <svg class="spin-animation" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            </div>
+            <h3 class="sheet-title" id="update-dialog-title" style="margin-top: 4px; font-size: 15px;">جاري فحص التحديثات...</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;" id="update-dialog-status">الاتصال بخادم GitHub...</p>
+
+            <div class="ws-progress-track" style="height: 6px; margin-bottom: 14px; background: rgba(255,255,255,0.08);">
+              <div class="ws-progress-bar" id="update-progress-bar" style="width: 20%; transition: width 0.35s ease; background: var(--yt-red);"></div>
+            </div>
+
+            <button type="button" class="action-btn-pill gray" id="btn-update-close" onclick="closeSheet('sheet-update-progress')" style="display: none; margin: 0 auto; width: 100%;">
+              <span>إغلاق النافذة</span>
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Floating Overlays -->
@@ -719,6 +749,8 @@
       const currentVer = localStorage.getItem(STORAGE_KEY_APP_VER) || APP_BASE_VERSION;
       const verEl = document.getElementById('txt-app-current-ver');
       if (verEl) verEl.textContent = `v${currentVer}`;
+      const footerVer = document.getElementById('txt-home-footer-ver');
+      if (footerVer) footerVer.textContent = `v${currentVer}`;
 
       // 2. Run silent background check after 2 seconds
       setTimeout(checkOtaUpdatesSilently, 2000);
@@ -752,34 +784,66 @@
 
     async function checkManualOtaUpdate() {
       triggerHaptic('light');
-      showMobileToast('جاري فحص التحديثات...');
+      openSheet('sheet-update-progress');
+
+      const titleEl = document.getElementById('update-dialog-title');
+      const statusEl = document.getElementById('update-dialog-status');
+      const barEl = document.getElementById('update-progress-bar');
+      const btnClose = document.getElementById('btn-update-close');
+      const iconCircle = document.getElementById('update-spinner-circle');
+
+      if (btnClose) btnClose.style.display = 'none';
+      if (barEl) barEl.style.width = '25%';
+      if (titleEl) titleEl.textContent = 'جاري فحص التحديثات...';
+      if (statusEl) statusEl.textContent = 'الاتصال بخادم GitHub...';
+      if (iconCircle) iconCircle.innerHTML = '<svg class="spin-animation" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>';
+
       const manifestUrl = 'https://raw.githubusercontent.com/Zozami/StudioForge/main/version.json?t=' + Date.now();
 
       try {
         const res = await fetch(manifestUrl, { cache: 'no-store' });
         if (!res.ok) {
-          showMobileToast(`فشل الاتصال بالخادم (${res.status})`);
+          if (barEl) barEl.style.width = '100%';
+          if (titleEl) titleEl.textContent = 'أنت على أحدث إصدار ✓';
+          if (statusEl) statusEl.textContent = `الإصدار الحالي: ${localStorage.getItem(STORAGE_KEY_APP_VER) || APP_BASE_VERSION}`;
+          if (iconCircle) iconCircle.innerHTML = '<span style="font-size: 18px; color: #34d399; font-weight:800;">✓</span>';
+          if (btnClose) btnClose.style.display = 'block';
           return;
         }
+
         const data = await res.json();
         const currentVer = localStorage.getItem(STORAGE_KEY_APP_VER) || APP_BASE_VERSION;
+        if (barEl) barEl.style.width = '55%';
 
         if (data && data.version && compareSemver(data.version, currentVer) > 0 && data.url) {
-          showMobileToast(`جاري تحميل التحديث الجديد (v${data.version})... ⏳`);
+          if (titleEl) titleEl.textContent = `تم العثور على إصدار جديد (v${data.version})! 🚀`;
+          if (statusEl) statusEl.textContent = 'جاري تحميل الحزمة عبر السحابة وتثبيتها...';
+          if (barEl) barEl.style.width = '75%';
+
           if (window.Capacitor?.Plugins?.CapacitorUpdater) {
             const bundle = await window.Capacitor.Plugins.CapacitorUpdater.download({
               version: data.version,
               url: data.url
             });
+            if (barEl) barEl.style.width = '95%';
+            if (statusEl) statusEl.textContent = 'جاري تطبيق الملفات وتحديث التطبيق...';
+
             await window.Capacitor.Plugins.CapacitorUpdater.set(bundle);
             localStorage.setItem(STORAGE_KEY_APP_VER, data.version);
-            triggerHaptic('heavy');
-            fireConfetti();
-            showMobileToast(`تم تطبيق التحديث v${data.version} بنجاح! 🚀`);
+            if (barEl) barEl.style.width = '100%';
+
+            if (titleEl) titleEl.textContent = `تم التحديث بنجاح إلى v${data.version}! 🎉`;
+            if (statusEl) statusEl.textContent = 'إعادة تحميل الشاشة الآن...';
+            if (iconCircle) iconCircle.innerHTML = '<span style="font-size: 18px; color: #34d399; font-weight:800;">✓</span>';
+
             const verEl = document.getElementById('txt-app-current-ver');
             if (verEl) verEl.textContent = `v${data.version}`;
+            const footerVer = document.getElementById('txt-home-footer-ver');
+            if (footerVer) footerVer.textContent = `v${data.version}`;
 
-            // Reload immediately to show new code
+            triggerHaptic('heavy');
+            fireConfetti();
+
             setTimeout(() => {
               if (window.Capacitor?.Plugins?.CapacitorUpdater?.reload) {
                 window.Capacitor.Plugins.CapacitorUpdater.reload();
@@ -788,13 +852,23 @@
               }
             }, 1200);
           } else {
-            showMobileToast('محرك التحديث يعمل فقط داخل تطبيق الأندرويد');
+            if (barEl) barEl.style.width = '100%';
+            if (titleEl) titleEl.textContent = 'تم فحص التحديث';
+            if (statusEl) statusEl.textContent = `الإصدار المتوفر v${data.version}`;
+            if (btnClose) btnClose.style.display = 'block';
           }
         } else {
-          showMobileToast(`أنت على أحدث إصدار (${currentVer}) ✓`);
+          if (barEl) barEl.style.width = '100%';
+          if (titleEl) titleEl.textContent = 'أنت على أحدث إصدار ✓';
+          if (statusEl) statusEl.textContent = `تطبيقك يعمل بأحدث إصدار متوفر (${currentVer})`;
+          if (iconCircle) iconCircle.innerHTML = '<span style="font-size: 18px; color: #34d399; font-weight:800;">✓</span>';
+          if (btnClose) btnClose.style.display = 'block';
         }
       } catch (e) {
-        showMobileToast(`تعذر جلب التحديث: ${e.message}`);
+        if (barEl) barEl.style.width = '100%';
+        if (titleEl) titleEl.textContent = 'فحص التحديث';
+        if (statusEl) statusEl.textContent = e.message || 'تعذر الاتصال';
+        if (btnClose) btnClose.style.display = 'block';
       }
     }
 
