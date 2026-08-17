@@ -262,20 +262,55 @@
               </div>
             </div>
 
-            <!-- Unified Single-Tap Day Card & Smart Action Button -->
+            <!-- Unified Day Availability & Exact Time Slot Picker -->
             <div class="collab-smart-day-card" id="collab-smart-day-card">
               <div class="collab-day-header-row">
                 <div style="display: flex; flex-direction: column; gap: 2px;">
-                  <span style="font-size: 13px; font-weight: 800; color: #fff;" id="collab-selected-date-title">يوم: 2026-08-20</span>
-                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary);" id="collab-selected-status-summary">اضغط على أي يوم لاختياره</span>
+                  <span style="font-size: 13px; font-weight: 800; color: #fff;" id="collab-selected-date-title">الخميس، 20 أغسطس</span>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary);" id="collab-selected-status-summary">حدد فترات تفرغك اليوم:</span>
                 </div>
                 <span class="badge-tag" id="collab-match-pill-badge" style="display: none; color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك</span>
               </div>
 
-              <!-- Single Smart Action Button (Toggles between Free & Busy) -->
-              <button type="button" class="collab-smart-toggle-btn state-busy" id="btn-collab-smart-toggle" onclick="toggleMyCollabSlot()">
-                <span>🟢 سجّل أنك متاح في هذا اليوم</span>
-              </button>
+              <!-- Interactive 4-Period Time Grid (1 Tap to Toggle) -->
+              <div class="collab-time-period-grid">
+                <button type="button" class="time-period-chip" id="period-chip-morning" onclick="toggleCollabPeriod('morning')">
+                  <span class="period-icon">🌅</span>
+                  <div class="period-info">
+                    <span class="period-name">الصباح</span>
+                    <span class="period-hours">9:00ص - 1:00م</span>
+                  </div>
+                </button>
+
+                <button type="button" class="time-period-chip" id="period-chip-afternoon" onclick="toggleCollabPeriod('afternoon')">
+                  <span class="period-icon">🌤️</span>
+                  <div class="period-info">
+                    <span class="period-name">العصر</span>
+                    <span class="period-hours">4:00م - 7:30م</span>
+                  </div>
+                </button>
+
+                <button type="button" class="time-period-chip" id="period-chip-evening" onclick="toggleCollabPeriod('evening')">
+                  <span class="period-icon">🌙</span>
+                  <div class="period-info">
+                    <span class="period-name">المساء</span>
+                    <span class="period-hours">8:30م - 12:00ص</span>
+                  </div>
+                </button>
+
+                <button type="button" class="time-period-chip" id="period-chip-all_day" onclick="toggleCollabPeriod('all_day')">
+                  <span class="period-icon">⚡</span>
+                  <div class="period-info">
+                    <span class="period-name">طوال اليوم</span>
+                    <span class="period-hours">متاح بأي وقت</span>
+                  </div>
+                </button>
+              </div>
+
+              <!-- Friend availability summary line -->
+              <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); padding-top: 4px; border-top: 1px solid var(--border-card);" id="collab-friend-periods-summary">
+                🟣 خويك لم يحدد تفرغه لهذا اليوم بعد
+              </div>
             </div>
 
             <!-- Matched Free Slots List -->
@@ -1035,14 +1070,22 @@
               AppStore.saveFriendCollabSlots(payload.allSlots);
             } else if (payload.date) {
               const friendSlots = AppStore.friendCollabSlots || {};
-              if (payload.isFree) friendSlots[payload.date] = true;
-              else delete friendSlots[payload.date];
+              if (payload.periods && payload.periods.length > 0) {
+                friendSlots[payload.date] = { periods: payload.periods };
+              } else if (payload.isFree) {
+                friendSlots[payload.date] = { periods: ['all_day'] };
+              } else {
+                delete friendSlots[payload.date];
+              }
               AppStore.saveFriendCollabSlots(friendSlots);
             }
 
             triggerHaptic('heavy');
             renderCollabCalendar();
             updateCollabSlotEditor(selectedCollabDay);
+
+            const receivedPeriods = payload.periods || [];
+            const periodsText = formatPeriodsListText(receivedPeriods);
 
             // TRIGGER NATIVE LOCAL NOTIFICATION ON FRIEND'S PHONE!
             if (window.Capacitor?.Plugins?.LocalNotifications) {
@@ -1051,9 +1094,9 @@
                   notifications: [
                     {
                       title: "🎮 استوديو فورج | دعوة تعاون وتصوير",
-                      body: payload.isFree
-                        ? `خويك أصبح متاحاً للتعاون يوم ${payload.date}! اضغط لتأكيد الجلسة 🚀`
-                        : `خويك حدّث جدول تفرغه ليوم ${payload.date}`,
+                      body: receivedPeriods.length > 0
+                        ? `خويك أصبح متاحاً للتعاون يوم ${formatArabicDateWithDayName(payload.date)} (${periodsText})! 🚀`
+                        : `خويك حدّث جدول تفرغه ليوم ${formatArabicDateWithDayName(payload.date)}`,
                       id: Math.floor(Math.random() * 100000),
                       schedule: { at: new Date(Date.now() + 100) }
                     }
@@ -1062,7 +1105,7 @@
               } catch(e) {}
             }
 
-            showMobileToast(payload.isFree ? `🔔 إشعار: خويك متاح للتعاون يوم ${payload.date}!` : `خويك غير متاح يوم ${payload.date}`);
+            showMobileToast(receivedPeriods.length > 0 ? `🔔 خويك متاح يوم ${formatArabicDateWithDayName(payload.date)} (${periodsText})!` : `خويك غير متاح يوم ${formatArabicDateWithDayName(payload.date)}`);
           } catch(err) {
             console.error('Error handling collab message:', err);
           }
@@ -1088,6 +1131,39 @@
       return `${dayName}، ${dayNum} ${monthName}`;
     }
 
+    const COLLAB_PERIODS = {
+      morning: { id: 'morning', name: 'الصباح', hours: '9:00ص - 1:00م', icon: '🌅' },
+      afternoon: { id: 'afternoon', name: 'العصر', hours: '4:00م - 7:30م', icon: '🌤️' },
+      evening: { id: 'evening', name: 'المساء', hours: '8:30م - 12:00ص', icon: '🌙' },
+      all_day: { id: 'all_day', name: 'طوال اليوم', hours: 'متاح بأي وقت', icon: '⚡' }
+    };
+
+    function getSlotPeriods(slot) {
+      if (!slot) return [];
+      if (slot === true) return ['all_day'];
+      if (Array.isArray(slot)) return slot;
+      if (Array.isArray(slot.periods)) return slot.periods;
+      return [];
+    }
+
+    function getOverlappingPeriods(myPeriods, friendPeriods) {
+      if (!myPeriods.length || !friendPeriods.length) return [];
+      if (myPeriods.includes('all_day') && friendPeriods.includes('all_day')) {
+        return ['morning', 'afternoon', 'evening'];
+      }
+      if (myPeriods.includes('all_day')) return [...friendPeriods];
+      if (friendPeriods.includes('all_day')) return [...myPeriods];
+      return myPeriods.filter(p => friendPeriods.includes(p));
+    }
+
+    function formatPeriodsListText(periods) {
+      if (!periods || !periods.length) return '';
+      return periods.map(pid => {
+        const p = COLLAB_PERIODS[pid];
+        return p ? `${p.icon} ${p.name} (${p.hours})` : pid;
+      }).join(' • ');
+    }
+
     /* COLLAB CALENDAR UI */
     function selectCollabDate(dateStr) {
       triggerHaptic('light');
@@ -1096,62 +1172,42 @@
       updateCollabSlotEditor(dateStr);
     }
 
-    function toggleMyCollabSlot() {
+    function toggleCollabPeriod(periodId) {
       if (!selectedCollabDay) return;
-      const isCurrentlyFree = !!AppStore.myCollabSlots[selectedCollabDay];
-      saveMyCollabSlot(!isCurrentlyFree);
-    }
+      const mySlots = AppStore.myCollabSlots || {};
+      let currentPeriods = getSlotPeriods(mySlots[selectedCollabDay]);
 
-    function updateCollabSlotEditor(dateStr) {
-      const titleEl = document.getElementById('collab-selected-date-title');
-      const summaryEl = document.getElementById('collab-selected-status-summary');
-      const matchPill = document.getElementById('collab-match-pill-badge');
-      const cardEl = document.getElementById('collab-smart-day-card');
-      const btnToggle = document.getElementById('btn-collab-smart-toggle');
-
-      if (titleEl) titleEl.textContent = formatArabicDateWithDayName(dateStr);
-
-      const isMyFree = !!AppStore.myCollabSlots[dateStr];
-      const isFriendFree = !!AppStore.friendCollabSlots[dateStr];
-      const isMatch = isMyFree && isFriendFree;
-
-      if (cardEl) {
-        cardEl.classList.toggle('match-active', isMatch);
-      }
-
-      if (matchPill) {
-        matchPill.style.display = isMatch ? 'inline-block' : 'none';
-      }
-
-      if (summaryEl) {
-        if (isMatch) {
-          summaryEl.innerHTML = '<strong style="color: #fbbf24;">🎯 متفرغان معاً اليوم! (جاهزون للتصوير والعمل 🎬)</strong>';
-        } else if (isMyFree && !isFriendFree) {
-          summaryEl.innerHTML = '<span style="color: #34d399;">🟢 أنت مسجل كمتاح</span> • <span style="color: var(--text-muted);">بانتظار خويك</span>';
-        } else if (!isMyFree && isFriendFree) {
-          summaryEl.innerHTML = '<span style="color: #c084fc;">🟣 خويك متفرغ اليوم</span> • <span style="color: var(--text-muted);">اضغط للربط معه</span>';
+      if (periodId === 'all_day') {
+        if (currentPeriods.includes('all_day')) {
+          currentPeriods = [];
         } else {
-          summaryEl.innerHTML = '<span style="color: var(--text-muted);">🔒 يوم غير محدد (مشغول للطرفين)</span>';
+          currentPeriods = ['all_day'];
+        }
+      } else {
+        // Remove all_day if selecting specific period
+        currentPeriods = currentPeriods.filter(p => p !== 'all_day');
+        if (currentPeriods.includes(periodId)) {
+          currentPeriods = currentPeriods.filter(p => p !== periodId);
+        } else {
+          currentPeriods.push(periodId);
         }
       }
 
-      if (btnToggle) {
-        if (isMyFree) {
-          btnToggle.className = 'collab-smart-toggle-btn state-free';
-          btnToggle.innerHTML = '<span>✓ أنت مسجل كمتاح (اضغط للإلغاء)</span>';
-        } else {
-          btnToggle.className = 'collab-smart-toggle-btn state-busy';
-          btnToggle.innerHTML = '<span>🟢 سجّل أنك متاح في هذا اليوم</span>';
-        }
+      if (currentPeriods.length > 0) {
+        mySlots[selectedCollabDay] = { periods: currentPeriods };
+      } else {
+        delete mySlots[selectedCollabDay];
       }
-    }
 
-    function saveMyCollabSlot(isFree) {
-      if (!selectedCollabDay) return;
-      const mySlots = AppStore.myCollabSlots;
-      if (isFree) mySlots[selectedCollabDay] = true;
-      else delete mySlots[selectedCollabDay];
       AppStore.saveMyCollabSlots(mySlots);
+      triggerHaptic('medium');
+
+      const friendPeriods = getSlotPeriods((AppStore.friendCollabSlots || {})[selectedCollabDay]);
+      const matches = getOverlappingPeriods(currentPeriods, friendPeriods);
+      if (matches.length > 0) {
+        fireConfetti();
+        triggerHaptic('heavy');
+      }
 
       renderCollabCalendar();
       updateCollabSlotEditor(selectedCollabDay);
@@ -1166,16 +1222,72 @@
           senderId: myDeviceId,
           roomKey: roomKey,
           date: selectedCollabDay,
-          isFree: isFree,
+          periods: currentPeriods,
           allSlots: mySlots,
           timestamp: Date.now()
         };
         mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
-        triggerHaptic('heavy');
-        if (isFree) fireConfetti();
-        showMobileToast(isFree ? 'تم بث تفرغك وإرسال الإشعار لخويك 🚀' : 'تم إلغاء التفرغ لهذا اليوم');
+        showMobileToast(currentPeriods.length > 0 ? 'تم بث أوقات تفرغك لخويك 🚀' : 'تم إلغاء التفرغ لهذا اليوم');
       } else {
-        showMobileToast('جاري الاتصال بالشبكة، يرجى المحاولة بعد قليل');
+        showMobileToast('تم الحفظ محلياً (جاري الاتصال بالشبكة)');
+      }
+    }
+
+    function updateCollabSlotEditor(dateStr) {
+      const titleEl = document.getElementById('collab-selected-date-title');
+      const summaryEl = document.getElementById('collab-selected-status-summary');
+      const matchPill = document.getElementById('collab-match-pill-badge');
+      const cardEl = document.getElementById('collab-smart-day-card');
+      const friendSummaryEl = document.getElementById('collab-friend-periods-summary');
+
+      if (titleEl) titleEl.textContent = formatArabicDateWithDayName(dateStr);
+
+      const myPeriods = getSlotPeriods((AppStore.myCollabSlots || {})[dateStr]);
+      const friendPeriods = getSlotPeriods((AppStore.friendCollabSlots || {})[dateStr]);
+      const overlapping = getOverlappingPeriods(myPeriods, friendPeriods);
+      const isMatch = overlapping.length > 0;
+
+      if (cardEl) cardEl.classList.toggle('match-active', isMatch);
+      if (matchPill) matchPill.style.display = isMatch ? 'inline-block' : 'none';
+
+      // Update the 4 chips
+      ['morning', 'afternoon', 'evening', 'all_day'].forEach(pid => {
+        const chip = document.getElementById(`period-chip-${pid}`);
+        if (!chip) return;
+
+        const isMy = myPeriods.includes(pid) || (myPeriods.includes('all_day') && pid !== 'all_day');
+        const isFriend = friendPeriods.includes(pid) || (friendPeriods.includes('all_day') && pid !== 'all_day');
+        const isMatchedSlot = (isMy && isFriend) || (myPeriods.includes('all_day') && friendPeriods.includes('all_day'));
+
+        chip.classList.toggle('my-active', isMy);
+        chip.classList.toggle('friend-active', isFriend && !isMatchedSlot);
+        chip.classList.toggle('matched-slot', isMatchedSlot);
+      });
+
+      // Update Summary Banner Text
+      if (summaryEl) {
+        if (isMatch) {
+          summaryEl.innerHTML = `<strong style="color: #fbbf24;">🎯 متفرغان معاً في: ${formatPeriodsListText(overlapping)} 🎬</strong>`;
+        } else if (myPeriods.length > 0 && friendPeriods.length === 0) {
+          summaryEl.innerHTML = `<span style="color: #34d399;">🟢 فتراتك المسجلة: ${formatPeriodsListText(myPeriods)}</span>`;
+        } else if (myPeriods.length === 0 && friendPeriods.length > 0) {
+          summaryEl.innerHTML = `<span style="color: #c084fc;">🟣 خويك متاح اليوم! اختر وقتاً مشابهاً للمطابقة</span>`;
+        } else if (myPeriods.length > 0 && friendPeriods.length > 0) {
+          summaryEl.innerHTML = `<span style="color: var(--text-secondary);">⚠️ أوقاتكم مختلفة اليوم، اختر فترة مشتركة للاتفاق</span>`;
+        } else {
+          summaryEl.innerHTML = `<span style="color: var(--text-muted);">حدد فترات تفرغك بالضغط على الأزرار بالأسفل:</span>`;
+        }
+      }
+
+      // Update Friend Summary Line
+      if (friendSummaryEl) {
+        if (friendPeriods.length > 0) {
+          friendSummaryEl.innerHTML = `🟣 <strong>خويك متاح في:</strong> ${formatPeriodsListText(friendPeriods)}`;
+          friendSummaryEl.style.color = '#c084fc';
+        } else {
+          friendSummaryEl.innerHTML = `🟣 خويك لم يحدد تفرغه لهذا اليوم بعد`;
+          friendSummaryEl.style.color = 'var(--text-muted)';
+        }
       }
     }
 
@@ -1198,15 +1310,18 @@
 
       for (let i = 1; i <= 31; i++) {
         const dateStr = `2026-08-${String(i).padStart(2, '0')}`;
-        const isMyFree = !!mySlots[dateStr];
-        const isFriendFree = !!friendSlots[dateStr];
-        const isMatch = isMyFree && isFriendFree;
+        const myPeriods = getSlotPeriods(mySlots[dateStr]);
+        const friendPeriods = getSlotPeriods(friendSlots[dateStr]);
+        const overlapping = getOverlappingPeriods(myPeriods, friendPeriods);
+        const isMatch = overlapping.length > 0;
+        const isMyFree = myPeriods.length > 0;
+        const isFriendFree = friendPeriods.length > 0;
         const isSelected = selectedCollabDay === dateStr;
         const isToday = i === currentDayNum;
 
         if (isMatch) {
           matchesCount++;
-          matchesArray.push(dateStr);
+          matchesArray.push({ date: dateStr, periods: overlapping });
         }
 
         let cellClass = '';
@@ -1247,20 +1362,23 @@
         `;
       }
 
-      if (matchesHeader) matchesHeader.textContent = `🎯 الأوقات المشتركة المسجلة (${matchesCount}):`;
+      if (matchesHeader) matchesHeader.textContent = `🎯 الأوقات المشتركة المتطابقة (${matchesCount}):`;
 
       if (matchesList) {
         if (matchesArray.length === 0) {
           if (matchesSection) matchesSection.style.display = 'none';
         } else {
           if (matchesSection) matchesSection.style.display = 'block';
-          matchesList.innerHTML = matchesArray.map(date => `
+          matchesList.innerHTML = matchesArray.map(item => `
             <div class="cal-event-item-card" style="border: 1px solid rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08));">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك</span>
-                <span style="font-size: 11px; font-weight: 800; color: #fff;">${formatArabicDateWithDayName(date)}</span>
+                <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت تصوير متطابق</span>
+                <span style="font-size: 11px; font-weight: 800; color: #fff;">${formatArabicDateWithDayName(item.date)}</span>
               </div>
-              <button type="button" class="action-btn-pill green" style="margin-top: 6px; padding: 6px; font-size: 11px;" onclick="confirmCollabSession('${date}')">
+              <div style="font-size: 11px; color: #fbbf24; font-weight: 700; margin-top: 4px;">
+                ${formatPeriodsListText(item.periods)}
+              </div>
+              <button type="button" class="action-btn-pill green" style="margin-top: 6px; padding: 6px; font-size: 11px;" onclick="confirmCollabSession('${item.date}')">
                 <span>🎮 تأكيد موعد جلسة التصوير</span>
               </button>
             </div>
