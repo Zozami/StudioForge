@@ -1,0 +1,1826 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>استوديو فورج | StudioForge</title>
+  <meta name="description" content="نظام تشغيل صناعة المحتوى المتكامل لصناع المحتوى." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff0033'><path d='M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z'/></svg>" />
+  <!-- Production MQTT Client for Real-Time Zero-Server Broadcast -->
+  <script src="mqtt.min.js"></script>
+</head>
+<body>
+  <div id="app-root">
+    <!-- NATIVE MOBILE APP SHELL -->
+    <div class="mobile-app-shell">
+
+      <!-- Top App Header -->
+      <header class="app-header">
+        <div class="app-brand" onclick="switchMobileScreen('home')">
+          <div class="brand-icon-circle">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/>
+            </svg>
+          </div>
+          <span class="brand-name">STUDIO<span class="red-dot">FORGE</span></span>
+        </div>
+
+        <div class="header-controls">
+          <button class="touch-pill-btn" onclick="startNewMobileProject()" style="background: var(--yt-red); color: #fff; border: none;">
+            + فيديو جديد
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Scrollable Viewport -->
+      <main class="app-viewport">
+
+        <!-- ====================================================================
+             SCREEN 1: HOME (CLEAN & STRAIGHTFORWARD)
+             ==================================================================== -->
+        <section id="screen-home" class="app-screen active">
+          <div class="home-summary-strip">
+            <div>
+              <div class="summary-title">حيّاك يا صانع المحتوى 👋</div>
+              <div class="summary-subtitle">خطوات سريعة لإنجاز وتصوير فيديوهاتك</div>
+            </div>
+            <span class="badge-tag" id="txt-badge-projects-count">0 مشاريع</span>
+          </div>
+
+          <div class="clean-choice-grid">
+            <!-- OPTION 1: START NEW VIDEO -->
+            <div class="clean-action-card primary" onclick="startNewMobileProject()">
+              <div class="card-left-content">
+                <div class="clean-card-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <span class="card-main-title">ابدأ فيديو جديد</span>
+                  <span class="card-sub-hint">الفكرة، التجهيز، المونتاج، والجدولة</span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--text-muted);"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <!-- OPTION 2: CHECK MY PROJECTS -->
+            <div class="clean-action-card secondary" onclick="switchMobileScreen('projects')">
+              <div class="card-left-content">
+                <div class="clean-card-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <span class="card-main-title">فيديوهاتي ومشاريعي</span>
+                  <span class="card-sub-hint">متابعة الفيديوهات الجارية ونسب إنجازها</span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--text-muted);"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
+            <!-- OPTION 3: COLLAB SHORTCUT -->
+            <div class="clean-action-card secondary" onclick="openCollabCalendarDirectly()">
+              <div class="card-left-content">
+                <div class="clean-card-icon-box" style="background: rgba(147, 51, 234, 0.15); color: #c084fc;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <span class="card-main-title">تقويم التعاون والتفرغ 🤝</span>
+                  <span class="card-sub-hint">حدد أوقات فراغك وخويك يوصله إشعار فوري</span>
+                </div>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color: var(--text-muted);"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SCREEN 2: WORKSPACE (7 PHASES ACCORDION)
+             ==================================================================== -->
+        <section id="screen-workspace" class="app-screen" style="padding-bottom: 24px;">
+          <div class="workspace-header-card">
+            <div class="ws-nav-top-row">
+              <button class="ws-back-btn" onclick="switchMobileScreen('projects')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                <span>كل المشاريع</span>
+              </button>
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button type="button" class="btn-delete-subtle" onclick="promptDeleteActiveProject()" title="حذف هذا المشروع">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <span id="ws-progress-pct" style="color: var(--yt-red); font-size: 13px; font-weight: 800;">0%</span>
+              </div>
+            </div>
+
+            <input type="text" id="ws-input-title" class="ws-title-input" placeholder="اسم الفيديو..." />
+
+            <div class="ws-progress-track">
+              <div class="ws-progress-bar" id="ws-progress-bar" style="width: 0%;"></div>
+            </div>
+
+            <div class="ws-meta-row">
+              <span id="ws-tasks-summary">0 من 7 خطوات</span>
+              <button type="button" class="touch-pill-btn" id="btn-toggle-all-tasks" onclick="toggleAllTasksForActiveProject()" style="padding: 3px 8px; font-size: 10px; color: #34d399;">
+                <span id="txt-btn-toggle-all">✓ إكمال الكل</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 7 Phases Stack -->
+          <div class="clean-phases-stack" id="mobile-phases-container">
+            <!-- Injected by JavaScript -->
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SCREEN 3: PROJECTS HUB
+             ==================================================================== -->
+        <section id="screen-projects" class="app-screen">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="font-size: 16px; font-weight: 800;">استوديو المشاريع</h2>
+            <button class="touch-pill-btn" style="background: var(--yt-red); color: #fff; border: none;" onclick="startNewMobileProject()">+ فيديو جديد</button>
+          </div>
+
+          <div id="mobile-projects-list">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SCREEN 4: INSPIRATION VAULT
+             ==================================================================== -->
+        <section id="screen-inspiration" class="app-screen">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="font-size: 16px; font-weight: 800;">مكتبة الأفكار</h2>
+            <button class="touch-pill-btn" onclick="promptAddInspiration()">+ فكرة جديدة</button>
+          </div>
+
+          <div id="mobile-inspiration-list" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             SCREEN 5: CALENDAR & COLLABORATION HUB (CLEAN & STRAIGHTFORWARD)
+             ==================================================================== -->
+        <section id="screen-calendar" class="app-screen">
+          <!-- Switcher -->
+          <div class="cal-segment-switch">
+            <button type="button" class="cal-segment-btn active" id="btn-tab-pub-cal" onclick="switchCalendarTab('publish')">
+              <span>📅 جدول نشر الفيديوهات</span>
+            </button>
+            <button type="button" class="cal-segment-btn collab-tab" id="btn-tab-collab-cal" onclick="switchCalendarTab('collab')">
+              <span>🤝 تقويم التعاون والتفرغ</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: PUBLISH CALENDAR -->
+          <div id="view-publish-calendar">
+            <div class="calendar-widget-card">
+              <div class="calendar-month-header">
+                <span class="cal-month-title">أغسطس 2026</span>
+                <span class="badge-tag" id="cal-total-scheduled-badge">0 مجدول</span>
+              </div>
+
+              <div class="cal-grid-weekdays">
+                <div class="cal-weekday-label">ح</div>
+                <div class="cal-weekday-label">ن</div>
+                <div class="cal-weekday-label">ث</div>
+                <div class="cal-weekday-label">ر</div>
+                <div class="cal-weekday-label">خ</div>
+                <div class="cal-weekday-label">ج</div>
+                <div class="cal-weekday-label">س</div>
+              </div>
+
+              <div class="cal-grid-days" id="mobile-calendar-grid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Scheduled Videos List -->
+            <div style="margin-bottom: 16px;">
+              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px; color: var(--text-primary);">فيديوهات التقويم:</h3>
+              <div id="mobile-calendar-events-list">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: COLLAB & AVAILABILITY CALENDAR -->
+          <div id="view-collab-calendar" style="display: none;">
+            <!-- Pairing Strip with Real-Time Indicator -->
+            <div class="collab-pair-strip">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="color: var(--text-muted);">الغرفة:</span>
+                <strong style="color: #c084fc; font-family: monospace;" id="display-collab-room-key">FORGE-AZ</strong>
+                <span id="collab-live-status-indicator" style="font-size: 10px; font-weight: 700; color: #34d399;">🟢 متصل</span>
+              </div>
+              <div style="display: flex; gap: 4px;">
+                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px;" onclick="promptChangeCollabKey()">تغيير</button>
+                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px; background: var(--collab-purple); color:#fff; border:none;" onclick="copyCollabRoomKey()">نسخ 🔗</button>
+              </div>
+            </div>
+
+            <!-- Collab Calendar Widget -->
+            <div class="calendar-widget-card" style="border-color: rgba(147, 51, 234, 0.25);">
+              <div class="calendar-month-header">
+                <span class="cal-month-title">أغسطس 2026 — جدول التفرغ</span>
+                <span class="badge-tag" id="collab-matches-badge" style="color: #f59e0b;">0 أوقات مشتركة</span>
+              </div>
+
+              <div class="cal-grid-weekdays">
+                <div class="cal-weekday-label">ح</div>
+                <div class="cal-weekday-label">ن</div>
+                <div class="cal-weekday-label">ث</div>
+                <div class="cal-weekday-label">ر</div>
+                <div class="cal-weekday-label">خ</div>
+                <div class="cal-weekday-label">ج</div>
+                <div class="cal-weekday-label">س</div>
+              </div>
+
+              <div class="cal-grid-days" id="collab-calendar-grid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Straightforward 1-Click Slot Toggler -->
+            <div class="calendar-widget-card" style="margin-top: -4px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 800; color: #fff;" id="collab-selected-date-title">يوم: 2026-08-20</span>
+                <span class="badge-tag" id="collab-slot-current-status" style="font-size: 10px;">مشغول (افتراضي)</span>
+              </div>
+
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="action-btn-pill green" style="flex: 1.4;" onclick="saveMyCollabSlot(true)">
+                  <span>🟢 أنا متاح اليوم (بث إشعار لخويي)</span>
+                </button>
+                <button type="button" class="action-btn-pill gray" style="flex: 0.8;" onclick="saveMyCollabSlot(false)">
+                  <span>🔒 مشغول</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Matching Free Slots -->
+            <div style="margin-top: 12px; margin-bottom: 16px;">
+              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #fff;">🎯 الأوقات المشتركة مع خويك:</h3>
+              <div id="collab-matches-list">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Update & Data Controls -->
+          <div style="display: flex; gap: 8px; margin-top: 16px;">
+            <button type="button" class="action-btn-pill gray" style="flex: 1; font-size: 11px; padding: 8px;" onclick="checkManualOtaUpdate()">
+              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.0</span>)</span>
+            </button>
+            <button type="button" class="action-btn-pill danger" style="flex: 1; font-size: 11px; padding: 8px;" onclick="clearAllUserData()">
+              <span>مسح كل البيانات</span>
+            </button>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- ==========================================================================
+           NATIVE BOTTOM TAB BAR
+           ========================================================================== -->
+      <nav class="bottom-tab-bar">
+        <button class="tab-item active" data-screen="home" onclick="switchMobileScreen('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span class="tab-label">الرئيسية</span>
+        </button>
+
+        <button class="tab-item" data-screen="projects" onclick="switchMobileScreen('projects')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span class="tab-label">المشاريع</span>
+        </button>
+
+        <button class="tab-item action-tab-center" onclick="startNewMobileProject()" title="مشروع جديد">
+          <div class="center-tab-bubble">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <span class="tab-label">جديد</span>
+        </button>
+
+        <button class="tab-item" data-screen="inspiration" onclick="switchMobileScreen('inspiration')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="tab-label">الأفكار</span>
+        </button>
+
+        <button class="tab-item" data-screen="calendar" onclick="switchMobileScreen('calendar')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span class="tab-label">الجدول</span>
+        </button>
+      </nav>
+
+      <!-- ======================================================================
+           BOTTOM SHEET 1: START NEW VIDEO PROJECT
+           ====================================================================== -->
+      <div id="sheet-new-project" class="mobile-sheet-backdrop" onclick="handleBackdropClick(event, 'sheet-new-project')">
+        <div class="mobile-bottom-sheet" onclick="event.stopPropagation()">
+          <div class="sheet-handle-bar"></div>
+          <div class="sheet-header-row">
+            <h3 class="sheet-title">فيديو جديد</h3>
+            <button class="sheet-close-btn" onclick="closeSheet('sheet-new-project')">✕</button>
+          </div>
+
+          <div class="sheet-form-field">
+            <label class="sheet-field-label">اسم أو فكرة الفيديو (اختياري):</label>
+            <input type="text" id="input-new-proj-title" class="sheet-text-input" placeholder="تقدر تخليه فاضي وتحدده داخل المشروع..." />
+          </div>
+
+          <div class="sheet-form-field">
+            <label class="sheet-field-label">المنصة:</label>
+            <div class="chip-selection-group" id="proj-platform-chips">
+              <button type="button" class="select-chip selected" data-val="YouTube">YouTube</button>
+              <button type="button" class="select-chip" data-val="Short">Shorts / TikTok</button>
+              <button type="button" class="select-chip" data-val="Twitch">Twitch</button>
+            </div>
+          </div>
+
+          <button class="action-btn-pill red" onclick="submitNewProjectFromSheet()" style="margin-top: 4px;">
+            <span>يلا نبدأ تجهيز الفيديو 🚀</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           BOTTOM SHEET 2: SAVE INSPIRATION
+           ====================================================================== -->
+      <div id="sheet-new-inspo" class="mobile-sheet-backdrop" onclick="handleBackdropClick(event, 'sheet-new-inspo')">
+        <div class="mobile-bottom-sheet" onclick="event.stopPropagation()">
+          <div class="sheet-handle-bar"></div>
+          <div class="sheet-header-row">
+            <h3 class="sheet-title">حفظ فكرة</h3>
+            <button class="sheet-close-btn" onclick="closeSheet('sheet-new-inspo')">✕</button>
+          </div>
+
+          <div class="sheet-form-field">
+            <label class="sheet-field-label">عنوان الفكرة:</label>
+            <input type="text" id="input-new-inspo-title" class="sheet-text-input" placeholder="مثال: فكرة ماب، أو حركة مونتاج" />
+          </div>
+
+          <div class="sheet-form-field">
+            <label class="sheet-field-label">الرابط (اختياري):</label>
+            <input type="url" id="input-new-inspo-url" class="sheet-text-input" placeholder="https://..." />
+          </div>
+
+          <button class="action-btn-pill red" onclick="submitNewInspoFromSheet()" style="margin-top: 4px;">
+            <span>حفظ الفكرة</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           BOTTOM SHEET 3: EDIT CALENDAR EVENT
+           ====================================================================== -->
+      <div id="sheet-edit-calendar-event" class="mobile-sheet-backdrop" onclick="handleBackdropClick(event, 'sheet-edit-calendar-event')">
+        <div class="mobile-bottom-sheet" onclick="event.stopPropagation()">
+          <div class="sheet-handle-bar"></div>
+          <div class="sheet-header-row">
+            <h3 class="sheet-title">تعديل موعد الفيديو</h3>
+            <button class="sheet-close-btn" onclick="closeSheet('sheet-edit-calendar-event')">✕</button>
+          </div>
+
+          <input type="hidden" id="cal-edit-proj-id" />
+
+          <div class="sheet-form-field">
+            <label class="sheet-field-label">تاريخ النشر:</label>
+            <input type="date" id="cal-edit-date-input" class="sheet-text-input" />
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <button class="action-btn-pill red" style="flex: 1.2;" onclick="saveCalendarEventChanges()">
+              <span>حفظ التعديل</span>
+            </button>
+            <button class="action-btn-pill danger" style="flex: 1;" onclick="removeCurrentEventFromCalendar()">
+              <span>إلغاء من التقويم</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           BOTTOM SHEET 4: CHANGE COLLAB ROOM KEY
+           ====================================================================== -->
+      <div id="sheet-change-collab-key" class="mobile-sheet-backdrop" onclick="handleBackdropClick(event, 'sheet-change-collab-key')">
+        <div class="mobile-bottom-sheet" onclick="event.stopPropagation()">
+          <div class="sheet-handle-bar"></div>
+          <div class="sheet-header-row">
+            <h3 class="sheet-title">رمز غرفة التعاون</h3>
+            <button class="sheet-close-btn" onclick="closeSheet('sheet-change-collab-key')">✕</button>
+          </div>
+
+          <div class="sheet-form-field">
+            <label class="sheet-field-label">اكتب نفس الرمز بجهازك وجهاز خويك:</label>
+            <input type="text" id="input-new-collab-key" class="sheet-text-input" placeholder="مثال: AZ-FORGE" />
+          </div>
+
+          <button class="action-btn-pill purple" onclick="saveNewCollabKey()" style="margin-top: 4px;">
+            <span>اتصال بالغرفة 🔗</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           BOTTOM SHEET 5: CONFIRM DELETE
+           ====================================================================== -->
+      <div id="sheet-confirm-dialog" class="mobile-sheet-backdrop" onclick="handleBackdropClick(event, 'sheet-confirm-dialog')">
+        <div class="mobile-bottom-sheet" onclick="event.stopPropagation()">
+          <div class="sheet-handle-bar"></div>
+          <div class="dialog-content-box">
+            <div class="dialog-icon-circle">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h3 class="sheet-title" id="dialog-confirm-title">حذف المشروع؟</h3>
+            <p style="font-size: 12px; color: var(--text-secondary);" id="dialog-confirm-desc">هل أنت متأكد؟</p>
+            
+            <div class="dialog-actions-row">
+              <button class="action-btn-pill gray" style="flex: 1;" onclick="closeSheet('sheet-confirm-dialog')" id="btn-dialog-cancel">إلغاء</button>
+              <button class="action-btn-pill red" style="flex: 1.3;" id="btn-dialog-confirm-action">تأكيد الحذف</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Overlays -->
+      <canvas id="confetti-canvas"></canvas>
+      <div id="toast-container"></div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       PURE SAUDI ARABIC APP LOGIC & PRODUCTION REAL-TIME RELAY
+       ========================================================================== -->
+  <script>
+    const APP_BASE_VERSION = '1.0.0';
+    const STORAGE_KEY_PROJS = 'sf_clean_projects_v1';
+    const STORAGE_KEY_INSPS = 'sf_clean_insps_v1';
+    const STORAGE_KEY_MY_COLLAB = 'sf_my_collab_slots_v1';
+    const STORAGE_KEY_FRIEND_COLLAB = 'sf_friend_collab_slots_v1';
+    const STORAGE_KEY_COLLAB_KEY = 'sf_collab_room_key_v1';
+    const STORAGE_KEY_DEVICE_ID = 'sf_device_id_v1';
+    const STORAGE_KEY_APP_VER = 'sf_installed_app_version_v1';
+
+    // Unique persistent ID for this phone to differentiate from friend's phone
+    let myDeviceId = localStorage.getItem(STORAGE_KEY_DEVICE_ID);
+    if (!myDeviceId) {
+      myDeviceId = 'dev_' + Math.random().toString(36).substring(2, 9);
+      localStorage.setItem(STORAGE_KEY_DEVICE_ID, myDeviceId);
+    }
+
+    let activeProjectId = null;
+    let selectedCalendarDay = null;
+    let selectedCollabDay = '2026-08-20';
+    let currentCalTab = 'publish';
+    let mqttClient = null;
+
+    /* THE EXACT 7 CREATOR PHASES */
+    const MASTER_PHASES = [
+      {
+        id: 'p1', num: '1', short: 'الفكرة والعنوان', title: '1. الفكرة والعنوان والهوك',
+        tasks: [
+          { id: 't1_1', text: 'اكتب فكرة الفيديو، العنوان، وهوك البداية', done: false }
+        ],
+        hasInputs: 'title_and_hook'
+      },
+      {
+        id: 'p2', num: '2', short: 'تجهيز المتطلبات', title: '2. تجهيز المتطلبات والأصول',
+        tasks: [
+          { id: 't2_1', text: 'جهّز متطلبات الفكرة والمحتوى اللي تحتاجه', done: false }
+        ],
+        hasInputs: 'prep'
+      },
+      {
+        id: 'p3', num: '3', short: 'العناوين والثامبنيل', title: '3. العناوين وفكرة الثامبنيل',
+        tasks: [
+          { id: 't3_1', text: 'اكتب خيارات العناوين وفكرة الثامبنيل المبدئية', done: false }
+        ],
+        hasInputs: 'titles_and_thumb_concept'
+      },
+      {
+        id: 'p4', num: '4', short: 'التسجيل', title: '4. التصوير والتسجيل',
+        tasks: [
+          { id: 't4_1', text: 'سجّل وصوّر محتوى الفيديو', done: false }
+        ]
+      },
+      {
+        id: 'p5', num: '5', short: 'المونتاج والشورتس', title: '5. المونتاج وقص الشورتس',
+        tasks: [
+          { id: 't5_1', text: 'مونت الفيديو واستخرج مقاطع الشورتس', done: false }
+        ],
+        hasInputs: 'shorts'
+      },
+      {
+        id: 'p6', num: '6', short: 'الثامبنيل النهائي', title: '6. الثامبنيل النهائي',
+        tasks: [
+          { id: 't6_1', text: 'جهّز وصمّم الثامبنيل النهائي للفيديو', done: false }
+        ],
+        hasInputs: 'final_thumbnail'
+      },
+      {
+        id: 'p7', num: '7', short: 'الرفع والجدولة', title: '7. الرفع أو الجدولة بالتقويم',
+        tasks: [
+          { id: 't7_1', text: 'ارفع الفيديو أو جدوله وسجله في التقويم', done: false }
+        ],
+        hasInputs: 'upload_schedule'
+      }
+    ];
+
+    // All phases closed by default
+    const collapsedPhaseIds = new Set(MASTER_PHASES.map(p => p.id));
+
+    /* STORE ENGINE */
+    class MobileStore {
+      constructor() {
+        this.projects = this.loadProjects();
+        this.inspirations = this.loadInsps();
+        this.myCollabSlots = this.loadMyCollabSlots();
+        this.friendCollabSlots = this.loadFriendCollabSlots();
+        this.collabRoomKey = localStorage.getItem(STORAGE_KEY_COLLAB_KEY) || 'FORGE-AZ';
+      }
+
+      loadProjects() {
+        const stored = localStorage.getItem(STORAGE_KEY_PROJS);
+        if (stored) {
+          try { return JSON.parse(stored); } catch(e){}
+        }
+        return [];
+      }
+
+      saveProjects(p) {
+        this.projects = p;
+        localStorage.setItem(STORAGE_KEY_PROJS, JSON.stringify(p));
+      }
+
+      loadInsps() {
+        const stored = localStorage.getItem(STORAGE_KEY_INSPS);
+        if (stored) {
+          try { return JSON.parse(stored); } catch(e){}
+        }
+        return [];
+      }
+
+      saveInsps(i) {
+        this.inspirations = i;
+        localStorage.setItem(STORAGE_KEY_INSPS, JSON.stringify(i));
+      }
+
+      loadMyCollabSlots() {
+        const stored = localStorage.getItem(STORAGE_KEY_MY_COLLAB);
+        if (stored) {
+          try { return JSON.parse(stored); } catch(e){}
+        }
+        return {};
+      }
+
+      saveMyCollabSlots(s) {
+        this.myCollabSlots = s;
+        localStorage.setItem(STORAGE_KEY_MY_COLLAB, JSON.stringify(s));
+      }
+
+      loadFriendCollabSlots() {
+        const stored = localStorage.getItem(STORAGE_KEY_FRIEND_COLLAB);
+        if (stored) {
+          try { return JSON.parse(stored); } catch(e){}
+        }
+        return {};
+      }
+
+      saveFriendCollabSlots(s) {
+        this.friendCollabSlots = s;
+        localStorage.setItem(STORAGE_KEY_FRIEND_COLLAB, JSON.stringify(s));
+      }
+
+      setCollabRoomKey(k) {
+        this.collabRoomKey = k || 'FORGE-AZ';
+        localStorage.setItem(STORAGE_KEY_COLLAB_KEY, this.collabRoomKey);
+      }
+
+      getProject(id) {
+        return this.projects.find(p => p.id === id);
+      }
+
+      createProject(title) {
+        const newP = {
+          id: 'p-' + Date.now(),
+          title: title || 'فيديو جديد',
+          platform: 'YouTube',
+          status: 'In Production',
+          publishDate: null,
+          phases: JSON.parse(JSON.stringify(MASTER_PHASES)),
+          hook: '',
+          prepNotes: '',
+          titleOptions: ['', ''],
+          thumbConcept: '',
+          finalThumbNotes: '',
+          shortsList: ''
+        };
+        this.projects.unshift(newP);
+        this.saveProjects(this.projects);
+        return newP;
+      }
+
+      deleteProject(id) {
+        this.projects = this.projects.filter(p => p.id !== id);
+        this.saveProjects(this.projects);
+      }
+
+      clearAll() {
+        this.saveProjects([]);
+        this.saveInsps([]);
+        this.saveMyCollabSlots({});
+        this.saveFriendCollabSlots({});
+      }
+    }
+
+    const AppStore = new MobileStore();
+
+    function getSyncedProjectPhases(project) {
+      return MASTER_PHASES.map((mPhase, pIdx) => {
+        const userPhase = (project.phases || []).find(p => p.id === mPhase.id) || (project.phases || [])[pIdx] || {};
+        const userTasks = userPhase.tasks || [];
+
+        return {
+          ...mPhase,
+          tasks: mPhase.tasks.map((mTask, tIdx) => {
+            const userTask = userTasks.find(t => t.id === mTask.id) || userTasks[tIdx] || {};
+            return {
+              ...mTask,
+              done: !!userTask.done
+            };
+          })
+        };
+      });
+    }
+
+    /* NAVIGATION */
+    function switchMobileScreen(screenName) {
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`screen-${screenName}`);
+      if (target) target.classList.add('active');
+
+      document.querySelectorAll('.tab-item').forEach(t => {
+        t.classList.toggle('active', t.dataset.screen === screenName);
+      });
+
+      if (screenName === 'projects') renderMobileProjects();
+      if (screenName === 'inspiration') renderMobileInspiration();
+      if (screenName === 'calendar') {
+        if (currentCalTab === 'collab') renderCollabCalendar();
+        else renderMobileCalendar();
+      }
+      if (screenName === 'home') updateHomeBadges();
+
+      document.querySelector('.app-viewport').scrollTop = 0;
+    }
+
+    function openCollabCalendarDirectly() {
+      switchMobileScreen('calendar');
+      switchCalendarTab('collab');
+    }
+
+    /* CALENDAR TAB SWITCHER */
+    function switchCalendarTab(tab) {
+      currentCalTab = tab;
+      triggerHaptic('light');
+      const isCollab = tab === 'collab';
+
+      document.getElementById('btn-tab-pub-cal')?.classList.toggle('active', !isCollab);
+      document.getElementById('btn-tab-collab-cal')?.classList.toggle('active', isCollab);
+
+      const pubView = document.getElementById('view-publish-calendar');
+      const collabView = document.getElementById('view-collab-calendar');
+
+      if (pubView) pubView.style.display = isCollab ? 'none' : 'block';
+      if (collabView) collabView.style.display = isCollab ? 'block' : 'none';
+
+      if (isCollab) renderCollabCalendar();
+      else renderMobileCalendar();
+    }
+
+    /* ==========================================================================
+       AUTOMATIC BACKGROUND OVER-THE-AIR (OTA) UPDATER ENGINE
+       ========================================================================== */
+
+    async function initOtaUpdaterEngine() {
+      // 1. Notify Capgo updater plugin that current bundle loaded safely
+      if (window.Capacitor?.Plugins?.CapacitorUpdater) {
+        try {
+          await window.Capacitor.Plugins.CapacitorUpdater.notifyAppReady();
+        } catch (e) {
+          console.warn('CapacitorUpdater notifyAppReady:', e);
+        }
+      }
+
+      // Update version badge
+      const currentVer = localStorage.getItem(STORAGE_KEY_APP_VER) || APP_BASE_VERSION;
+      const verEl = document.getElementById('txt-app-current-ver');
+      if (verEl) verEl.textContent = `v${currentVer}`;
+
+      // 2. Run silent background check after 2 seconds
+      setTimeout(checkOtaUpdatesSilently, 2000);
+    }
+
+    async function checkOtaUpdatesSilently() {
+      const manifestUrl = 'https://raw.githubusercontent.com/Zozami/StudioForge/main/version.json?t=' + Date.now();
+      try {
+        const res = await fetch(manifestUrl, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data || !data.version || !data.url) return;
+
+        const currentVer = localStorage.getItem(STORAGE_KEY_APP_VER) || APP_BASE_VERSION;
+        if (compareSemver(data.version, currentVer) > 0) {
+          console.log(`[OTA] New update found: v${data.version}. Downloading in background...`);
+          if (window.Capacitor?.Plugins?.CapacitorUpdater) {
+            const bundle = await window.Capacitor.Plugins.CapacitorUpdater.download({
+              version: data.version,
+              url: data.url
+            });
+            await window.Capacitor.Plugins.CapacitorUpdater.set(bundle);
+            localStorage.setItem(STORAGE_KEY_APP_VER, data.version);
+            console.log(`[OTA] Update v${data.version} ready!`);
+          }
+        }
+      } catch (err) {
+        console.log('[OTA] Silent check complete:', err.message);
+      }
+    }
+
+    async function checkManualOtaUpdate() {
+      triggerHaptic('light');
+      showMobileToast('جاري فحص التحديثات...');
+      const manifestUrl = 'https://raw.githubusercontent.com/Zozami/StudioForge/main/version.json?t=' + Date.now();
+
+      try {
+        const res = await fetch(manifestUrl, { cache: 'no-store' });
+        if (!res.ok) {
+          showMobileToast(`فشل الاتصال بالخادم (${res.status})`);
+          return;
+        }
+        const data = await res.json();
+        const currentVer = localStorage.getItem(STORAGE_KEY_APP_VER) || APP_BASE_VERSION;
+
+        if (data && data.version && compareSemver(data.version, currentVer) > 0 && data.url) {
+          showMobileToast(`جاري تحميل التحديث الجديد (v${data.version})... ⏳`);
+          if (window.Capacitor?.Plugins?.CapacitorUpdater) {
+            const bundle = await window.Capacitor.Plugins.CapacitorUpdater.download({
+              version: data.version,
+              url: data.url
+            });
+            await window.Capacitor.Plugins.CapacitorUpdater.set(bundle);
+            localStorage.setItem(STORAGE_KEY_APP_VER, data.version);
+            triggerHaptic('heavy');
+            fireConfetti();
+            showMobileToast(`تم تطبيق التحديث v${data.version} بنجاح! 🚀`);
+            const verEl = document.getElementById('txt-app-current-ver');
+            if (verEl) verEl.textContent = `v${data.version}`;
+
+            // Reload immediately to show new code
+            setTimeout(() => {
+              if (window.Capacitor?.Plugins?.CapacitorUpdater?.reload) {
+                window.Capacitor.Plugins.CapacitorUpdater.reload();
+              } else {
+                window.location.reload();
+              }
+            }, 1200);
+          } else {
+            showMobileToast('محرك التحديث يعمل فقط داخل تطبيق الأندرويد');
+          }
+        } else {
+          showMobileToast(`أنت على أحدث إصدار (${currentVer}) ✓`);
+        }
+      } catch (e) {
+        showMobileToast(`تعذر جلب التحديث: ${e.message}`);
+      }
+    }
+
+    function compareSemver(v1, v2) {
+      const a = v1.split('.').map(Number);
+      const b = v2.split('.').map(Number);
+      for (let i = 0; i < Math.max(a.length, b.length); i++) {
+        const num1 = a[i] || 0;
+        const num2 = b[i] || 0;
+        if (num1 > num2) return 1;
+        if (num1 < num2) return -1;
+      }
+      return 0;
+    }
+
+    /* ==========================================================================
+       REAL-TIME MQTT BROKER CONNECTION & NOTIFICATION ENGINE
+       ========================================================================== */
+
+    async function initCollabRealtimeEngine() {
+      if (window.Capacitor?.Plugins?.LocalNotifications) {
+        try {
+          await window.Capacitor.Plugins.LocalNotifications.requestPermissions();
+        } catch (e) {}
+      }
+      connectMqttRelay();
+    }
+
+    function connectMqttRelay() {
+      const roomKey = (AppStore.collabRoomKey || 'FORGE-AZ').trim().toUpperCase();
+      const displayKeyEl = document.getElementById('display-collab-room-key');
+      const statusIndicator = document.getElementById('collab-live-status-indicator');
+
+      if (displayKeyEl) displayKeyEl.textContent = roomKey;
+      if (statusIndicator) {
+        statusIndicator.textContent = '🟡 جاري الاتصال...';
+        statusIndicator.style.color = '#f59e0b';
+      }
+
+      const topic = `studioforge/collab/${roomKey}`;
+
+      if (typeof mqtt === 'undefined') {
+        console.warn('MQTT library not yet loaded, retrying in 500ms...');
+        setTimeout(connectMqttRelay, 500);
+        return;
+      }
+
+      try {
+        if (mqttClient) {
+          mqttClient.end(true);
+        }
+
+        // Connect over secure WebSocket to public global broker
+        mqttClient = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+          clientId: `sf_${myDeviceId}_${Math.random().toString(16).substring(2, 6)}`,
+          clean: true,
+          reconnectPeriod: 2500,
+          connectTimeout: 7000
+        });
+
+        mqttClient.on('connect', () => {
+          console.log('Connected to MQTT broker for topic:', topic);
+          if (statusIndicator) {
+            statusIndicator.textContent = '🟢 متصل بالبث';
+            statusIndicator.style.color = '#34d399';
+          }
+          mqttClient.subscribe(topic, { qos: 1 });
+        });
+
+        mqttClient.on('reconnect', () => {
+          if (statusIndicator) {
+            statusIndicator.textContent = '🟡 إعادة اتصال...';
+            statusIndicator.style.color = '#f59e0b';
+          }
+        });
+
+        mqttClient.on('offline', () => {
+          if (statusIndicator) {
+            statusIndicator.textContent = '🔴 غير متصل';
+            statusIndicator.style.color = '#ef4444';
+          }
+        });
+
+        mqttClient.on('message', async (recvTopic, msgBuffer) => {
+          try {
+            const payload = JSON.parse(msgBuffer.toString());
+            console.log('Received collab payload:', payload);
+
+            // CRITICAL CHECK: Ignore our own messages! Only process when sent by our friend!
+            if (!payload || payload.senderId === myDeviceId) {
+              return;
+            }
+
+            // Update friend's slots
+            if (payload.allSlots) {
+              AppStore.saveFriendCollabSlots(payload.allSlots);
+            } else if (payload.date) {
+              const friendSlots = AppStore.friendCollabSlots || {};
+              if (payload.isFree) friendSlots[payload.date] = true;
+              else delete friendSlots[payload.date];
+              AppStore.saveFriendCollabSlots(friendSlots);
+            }
+
+            triggerHaptic('heavy');
+            renderCollabCalendar();
+            updateCollabSlotEditor(selectedCollabDay);
+
+            // TRIGGER NATIVE LOCAL NOTIFICATION ON FRIEND'S PHONE!
+            if (window.Capacitor?.Plugins?.LocalNotifications) {
+              try {
+                await window.Capacitor.Plugins.LocalNotifications.schedule({
+                  notifications: [
+                    {
+                      title: "🎮 استوديو فورج | دعوة تعاون وتصوير",
+                      body: payload.isFree
+                        ? `خويك أصبح متاحاً للتعاون يوم ${payload.date}! اضغط لتأكيد الجلسة 🚀`
+                        : `خويك حدّث جدول تفرغه ليوم ${payload.date}`,
+                      id: Math.floor(Math.random() * 100000),
+                      schedule: { at: new Date(Date.now() + 100) }
+                    }
+                  ]
+                });
+              } catch(e) {}
+            }
+
+            showMobileToast(payload.isFree ? `🔔 إشعار: خويك متاح للتعاون يوم ${payload.date}!` : `خويك غير متاح يوم ${payload.date}`);
+          } catch(err) {
+            console.error('Error handling collab message:', err);
+          }
+        });
+
+      } catch(e) {
+        console.error('Failed to init MQTT:', e);
+      }
+    }
+
+    /* COLLAB CALENDAR UI */
+    function selectCollabDate(dateStr) {
+      triggerHaptic('light');
+      selectedCollabDay = dateStr;
+      renderCollabCalendar();
+      updateCollabSlotEditor(dateStr);
+    }
+
+    function updateCollabSlotEditor(dateStr) {
+      const titleEl = document.getElementById('collab-selected-date-title');
+      const statusEl = document.getElementById('collab-slot-current-status');
+
+      if (titleEl) titleEl.textContent = `يوم: ${dateStr}`;
+
+      const isMyFree = !!AppStore.myCollabSlots[dateStr];
+      const isFriendFree = !!AppStore.friendCollabSlots[dateStr];
+
+      if (isMyFree && isFriendFree) {
+        if (statusEl) {
+          statusEl.textContent = '🎯 وقت مشترك!';
+          statusEl.style.color = '#f59e0b';
+        }
+      } else if (isMyFree) {
+        if (statusEl) {
+          statusEl.textContent = '🟢 متاح';
+          statusEl.style.color = '#34d399';
+        }
+      } else {
+        if (statusEl) {
+          statusEl.textContent = 'مشغول (افتراضي)';
+          statusEl.style.color = 'var(--text-muted)';
+        }
+      }
+    }
+
+    function saveMyCollabSlot(isFree) {
+      if (!selectedCollabDay) return;
+      const mySlots = AppStore.myCollabSlots;
+      if (isFree) mySlots[selectedCollabDay] = true;
+      else delete mySlots[selectedCollabDay];
+      AppStore.saveMyCollabSlots(mySlots);
+
+      renderCollabCalendar();
+      updateCollabSlotEditor(selectedCollabDay);
+
+      // Publish to MQTT topic
+      const roomKey = (AppStore.collabRoomKey || 'FORGE-AZ').trim().toUpperCase();
+      const topic = `studioforge/collab/${roomKey}`;
+
+      if (mqttClient && mqttClient.connected) {
+        const payload = {
+          app: 'StudioForge',
+          senderId: myDeviceId,
+          roomKey: roomKey,
+          date: selectedCollabDay,
+          isFree: isFree,
+          allSlots: mySlots,
+          timestamp: Date.now()
+        };
+        mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
+        triggerHaptic('heavy');
+        if (isFree) fireConfetti();
+        showMobileToast(isFree ? 'تم بث تفرغك وإرسال الإشعار لخويك 🚀' : 'تم تعيين اليوم كمشغول');
+      } else {
+        showMobileToast('جاري الاتصال بالشبكة، يرجى المحاولة بعد قليل');
+      }
+    }
+
+    function renderCollabCalendar() {
+      const grid = document.getElementById('collab-calendar-grid');
+      const matchesBadge = document.getElementById('collab-matches-badge');
+      const matchesList = document.getElementById('collab-matches-list');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const mySlots = AppStore.myCollabSlots || {};
+      const friendSlots = AppStore.friendCollabSlots || {};
+
+      let matchesCount = 0;
+      const matchesArray = [];
+
+      const today = new Date();
+      const currentDayNum = today.getDate();
+
+      for (let i = 1; i <= 31; i++) {
+        const dateStr = `2026-08-${String(i).padStart(2, '0')}`;
+        const isMyFree = !!mySlots[dateStr];
+        const isFriendFree = !!friendSlots[dateStr];
+        const isMatch = isMyFree && isFriendFree;
+        const isSelected = selectedCollabDay === dateStr;
+        const isToday = i === currentDayNum;
+
+        if (isMatch) {
+          matchesCount++;
+          matchesArray.push(dateStr);
+        }
+
+        let cellClass = '';
+        if (isMatch) cellClass = 'collab-match';
+        else if (isMyFree) cellClass = 'collab-my-free';
+        else if (isFriendFree) cellClass = 'collab-friend-free';
+
+        grid.innerHTML += `
+          <div class="cal-day-cell ${cellClass} ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="selectCollabDate('${dateStr}')">
+            <span class="cal-day-num">${i}</span>
+            ${isMatch ? `<span class="cal-event-dot match"></span>` : (isMyFree ? `<span class="cal-event-dot"></span>` : (isFriendFree ? `<span class="cal-event-dot friend"></span>` : ''))}
+          </div>
+        `;
+      }
+
+      if (matchesBadge) matchesBadge.textContent = `${matchesCount} أوقات مشتركة 🎯`;
+
+      if (matchesList) {
+        if (matchesArray.length === 0) {
+          matchesList.innerHTML = `
+            <div style="padding: 14px; text-align: center; font-size: 11px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-sm); border: 1px dashed var(--border-card);">
+              لا توجد أوقات تصوير مشتركة حتى الآن. حدد تفرغك بالأعلى لمطابقة خويك!
+            </div>
+          `;
+        } else {
+          matchesList.innerHTML = matchesArray.map(date => `
+            <div class="cal-event-item-card" style="border-color: rgba(245, 158, 11, 0.3);">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="badge-tag" style="color: #f59e0b;">🎯 متفرغان بنفس اليوم</span>
+                <span style="font-size: 11px; font-weight: 700; color: #fff;">${date}</span>
+              </div>
+              <button type="button" class="action-btn-pill green" style="margin-top: 4px; padding: 6px; font-size: 11px;" onclick="confirmCollabSession('${date}')">
+                <span>🎮 تأكيد جلسة التصوير</span>
+              </button>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    function confirmCollabSession(dateStr) {
+      triggerHaptic('heavy');
+      fireConfetti();
+      showMobileToast(`تم تأكيد جلسة التصوير ليوم ${dateStr}! 🎮`);
+    }
+
+    function promptChangeCollabKey() {
+      const input = document.getElementById('input-new-collab-key');
+      if (input) input.value = AppStore.collabRoomKey;
+      openSheet('sheet-change-collab-key');
+    }
+
+    function saveNewCollabKey() {
+      const input = document.getElementById('input-new-collab-key');
+      const val = input ? input.value.trim().toUpperCase() : '';
+      if (!val) return;
+      AppStore.setCollabRoomKey(val);
+      closeSheet('sheet-change-collab-key');
+      triggerHaptic('medium');
+      connectMqttRelay();
+      renderCollabCalendar();
+      showMobileToast(`تم الاتصال بالغرفة: ${val}`);
+    }
+
+    function copyCollabRoomKey() {
+      triggerHaptic('light');
+      if (navigator.clipboard) navigator.clipboard.writeText(AppStore.collabRoomKey);
+      showMobileToast(`تم نسخ رمز الغرفة: ${AppStore.collabRoomKey}`);
+    }
+
+    /* BOTTOM SHEETS */
+    function openSheet(sheetId) {
+      triggerHaptic('light');
+      const sheet = document.getElementById(sheetId);
+      if (sheet) {
+        sheet.classList.add('active');
+        if (sheetId === 'sheet-new-project') {
+          document.getElementById('input-new-proj-title').value = '';
+          setTimeout(() => document.getElementById('input-new-proj-title').focus(), 150);
+        } else if (sheetId === 'sheet-new-inspo') {
+          document.getElementById('input-new-inspo-title').value = '';
+          document.getElementById('input-new-inspo-url').value = '';
+          setTimeout(() => document.getElementById('input-new-inspo-title').focus(), 150);
+        }
+      }
+    }
+
+    function closeSheet(sheetId) {
+      triggerHaptic('light');
+      const sheet = document.getElementById(sheetId);
+      if (sheet) sheet.classList.remove('active');
+    }
+
+    function handleBackdropClick(event, sheetId) {
+      if (event.target === document.getElementById(sheetId)) closeSheet(sheetId);
+    }
+
+    function startNewMobileProject() {
+      openSheet('sheet-new-project');
+    }
+
+    function submitNewProjectFromSheet() {
+      const titleInput = document.getElementById('input-new-proj-title').value.trim();
+      const selectedChip = document.querySelector('#proj-platform-chips .select-chip.selected');
+      const platform = selectedChip ? selectedChip.dataset.val : 'YouTube';
+
+      const title = titleInput || 'فيديو جديد';
+      const newProj = AppStore.createProject(title);
+      newProj.platform = platform;
+      AppStore.saveProjects(AppStore.projects);
+
+      closeSheet('sheet-new-project');
+      triggerHaptic('medium');
+      openMobileWorkspace(newProj.id);
+      showMobileToast('تم إنشاء المشروع بنجاح 🚀');
+    }
+
+    function promptAddInspiration() {
+      openSheet('sheet-new-inspo');
+    }
+
+    function submitNewInspoFromSheet() {
+      const title = document.getElementById('input-new-inspo-title').value.trim();
+      if (!title) {
+        showMobileToast('اكتب عنوان الفكرة أولاً');
+        return;
+      }
+      const url = document.getElementById('input-new-inspo-url').value.trim();
+
+      AppStore.inspirations.unshift({
+        id: 'i-' + Date.now(),
+        title,
+        url: url || ''
+      });
+      AppStore.saveInsps(AppStore.inspirations);
+
+      closeSheet('sheet-new-inspo');
+      triggerHaptic('medium');
+      renderMobileInspiration();
+      showMobileToast('تم حفظ الفكرة');
+    }
+
+    /* PROJECT DELETION */
+    function promptDeleteProject(projId, event) {
+      if (event) event.stopPropagation();
+      const project = AppStore.getProject(projId);
+      if (!project) return;
+
+      const titleEl = document.getElementById('dialog-confirm-title');
+      const descEl = document.getElementById('dialog-confirm-desc');
+      const btnConfirm = document.getElementById('btn-dialog-confirm-action');
+
+      titleEl.textContent = 'حذف المشروع؟';
+      descEl.textContent = `هل أنت متأكد من حذف "${project.title}" نهائياً؟`;
+
+      btnConfirm.onclick = () => {
+        AppStore.deleteProject(projId);
+        closeSheet('sheet-confirm-dialog');
+        triggerHaptic('heavy');
+        showMobileToast('تم حذف المشروع');
+        updateHomeBadges();
+        renderMobileProjects();
+        renderMobileCalendar();
+        if (activeProjectId === projId) {
+          activeProjectId = null;
+          switchMobileScreen('projects');
+        }
+      };
+
+      openSheet('sheet-confirm-dialog');
+    }
+
+    function promptDeleteActiveProject() {
+      if (!activeProjectId) return;
+      promptDeleteProject(activeProjectId);
+    }
+
+    function clearAllUserData() {
+      const titleEl = document.getElementById('dialog-confirm-title');
+      const descEl = document.getElementById('dialog-confirm-desc');
+      const btnConfirm = document.getElementById('btn-dialog-confirm-action');
+
+      titleEl.textContent = 'مسح جميع البيانات؟';
+      descEl.textContent = 'سيتم حذف جميع المشاريع والأفكار المحفوظة نهائياً.';
+
+      btnConfirm.onclick = () => {
+        AppStore.clearAll();
+        closeSheet('sheet-confirm-dialog');
+        triggerHaptic('heavy');
+        showMobileToast('تم مسح البيانات');
+        updateHomeBadges();
+        renderMobileProjects();
+        renderMobileInspiration();
+        renderMobileCalendar();
+        renderCollabCalendar();
+      };
+
+      openSheet('sheet-confirm-dialog');
+    }
+
+    function triggerHaptic(style) {
+      if (window.Capacitor?.Plugins?.Haptics) {
+        try {
+          if (style === 'heavy') window.Capacitor.Plugins.Haptics.notification({ type: 'WARNING' });
+          else window.Capacitor.Plugins.Haptics.impact({ style: style.toUpperCase() });
+        } catch (e) {}
+      }
+    }
+
+    /* WORKSPACE */
+    function openMobileWorkspace(projId) {
+      const project = AppStore.getProject(projId);
+      if (!project) return;
+
+      activeProjectId = projId;
+      document.getElementById('ws-input-title').value = project.title;
+
+      collapsedPhaseIds.clear();
+      MASTER_PHASES.forEach(p => collapsedPhaseIds.add(p.id));
+
+      renderMobilePhases(project);
+      updateMobileProgress(project);
+
+      switchMobileScreen('workspace');
+    }
+
+    function updateProjectTitle(projId, val) {
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      p.title = val || 'فيديو جديد';
+      AppStore.saveProjects(AppStore.projects);
+      document.getElementById('ws-input-title').value = p.title;
+    }
+
+    function addTitleOption(projId) {
+      triggerHaptic('light');
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      p.titleOptions = p.titleOptions || [];
+      p.titleOptions.push('');
+      AppStore.saveProjects(AppStore.projects);
+      renderMobilePhases(p);
+    }
+
+    function updateTitleOption(projId, idx, val) {
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      p.titleOptions = p.titleOptions || [];
+      p.titleOptions[idx] = val;
+      AppStore.saveProjects(AppStore.projects);
+    }
+
+    function removeTitleOption(projId, idx) {
+      triggerHaptic('light');
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      p.titleOptions.splice(idx, 1);
+      if (p.titleOptions.length === 0) p.titleOptions.push('');
+      AppStore.saveProjects(AppStore.projects);
+      renderMobilePhases(p);
+    }
+
+    function toggleAllTasksForActiveProject() {
+      if (!activeProjectId) return;
+      const project = AppStore.getProject(activeProjectId);
+      if (!project) return;
+
+      const phases = getSyncedProjectPhases(project);
+      let total = 0, done = 0;
+      phases.forEach(ph => ph.tasks.forEach(t => { total++; if (t.done) done++; }));
+      const shouldCompleteAll = done < total;
+
+      phases.forEach(ph => ph.tasks.forEach(t => { t.done = shouldCompleteAll; }));
+      project.phases = phases;
+      AppStore.saveProjects(AppStore.projects);
+
+      triggerHaptic(shouldCompleteAll ? 'heavy' : 'light');
+      if (shouldCompleteAll) fireConfetti();
+
+      renderMobilePhases(project);
+      updateMobileProgress(project);
+      showMobileToast(shouldCompleteAll ? 'تم إنهاء جميع المهام ✓' : 'تم إلغاء تحديد المهام');
+    }
+
+    /* RENDER PHASES */
+    function renderMobilePhases(project) {
+      const container = document.getElementById('mobile-phases-container');
+      const phases = getSyncedProjectPhases(project);
+
+      project.phases = phases;
+      project.titleOptions = project.titleOptions || ['', ''];
+
+      container.innerHTML = phases.map((phase, idx) => {
+        const total = phase.tasks.length;
+        const done = phase.tasks.filter(t => t.done).length;
+        const isDone = total > 0 && done === total;
+        const isCollapsed = collapsedPhaseIds.has(phase.id);
+
+        let extraHtml = '';
+
+        if (phase.hasInputs === 'title_and_hook') {
+          extraHtml = `
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+              <span class="phase-tool-label">عنوان الفيديو:</span>
+              <input type="text" class="tool-text-input" value="${escapeHtml(project.title || '')}" oninput="updateProjectTitle('${project.id}', this.value)" placeholder="اكتب أو عدّل العنوان..." />
+
+              <span class="phase-tool-label">هوك البداية (أول 5 ثواني):</span>
+              <textarea class="tool-text-input" rows="2" onchange="saveField('${project.id}', 'hook', this.value)" placeholder="أول جملة بتشد المشاهد...">${escapeHtml(project.hook || '')}</textarea>
+            </div>
+          `;
+        }
+        else if (phase.hasInputs === 'prep') {
+          extraHtml = `
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+              <span class="phase-tool-label">تجهيزات المحتوى والمراجع:</span>
+              <textarea class="tool-text-input" rows="2" onchange="saveField('${project.id}', 'prepNotes', this.value)" placeholder="روابط، صور، متطلبات...">${escapeHtml(project.prepNotes || '')}</textarea>
+            </div>
+          `;
+        }
+        else if (phase.hasInputs === 'titles_and_thumb_concept') {
+          extraHtml = `
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="phase-tool-label">خيارات العناوين:</span>
+                <button type="button" class="touch-pill-btn" style="padding: 2px 6px; font-size: 10px;" onclick="addTitleOption('${project.id}')">+ أضف</button>
+              </div>
+              ${project.titleOptions.map((opt, optIdx) => `
+                <div style="display: flex; gap: 4px; align-items: center;">
+                  <input type="text" class="tool-text-input" value="${escapeHtml(opt)}" onchange="updateTitleOption('${project.id}', ${optIdx}, this.value)" placeholder="عنوان ${optIdx + 1}..." />
+                  ${project.titleOptions.length > 1 ? `<button type="button" onclick="removeTitleOption('${project.id}', ${optIdx})" style="background:none; border:none; color:var(--text-muted); padding:4px;">✕</button>` : ''}
+                </div>
+              `).join('')}
+
+              <span class="phase-tool-label">فكرة الثامبنيل (اختياري):</span>
+              <textarea class="tool-text-input" rows="2" onchange="saveField('${project.id}', 'thumbConcept', this.value)" placeholder="شكل أو فكرة الثامبنيل...">${escapeHtml(project.thumbConcept || '')}</textarea>
+            </div>
+          `;
+        }
+        else if (phase.hasInputs === 'shorts') {
+          extraHtml = `
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+              <span class="phase-tool-label">توقيتات مقاطع الشورتس:</span>
+              <textarea class="tool-text-input" rows="2" onchange="saveField('${project.id}', 'shortsList', this.value)" placeholder="1. لقطة (01:20)...">${escapeHtml(project.shortsList || '')}</textarea>
+            </div>
+          `;
+        }
+        else if (phase.hasInputs === 'final_thumbnail') {
+          extraHtml = `
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+              <span class="phase-tool-label">رابط أو تفاصيل الثامبنيل النهائي:</span>
+              <textarea class="tool-text-input" rows="2" onchange="saveField('${project.id}', 'finalThumbNotes', this.value)" placeholder="الرابط أو النص النهائي...">${escapeHtml(project.finalThumbNotes || '')}</textarea>
+            </div>
+          `;
+        }
+        else if (phase.hasInputs === 'upload_schedule') {
+          const isScheduled = !!project.publishDate;
+          extraHtml = `
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
+              <span class="phase-tool-label">موعد النشر بالتقويم:</span>
+              <input type="date" id="input-phase-pub-date-${project.id}" class="tool-text-input" value="${project.publishDate || new Date().toISOString().split('T')[0]}" onchange="saveField('${project.id}', 'publishDate', this.value)" />
+
+              <div style="display: flex; gap: 6px; margin-top: 4px;">
+                <button type="button" class="action-btn-pill red" style="flex: 1.2;" onclick="markProjectUploaded('${project.id}')">
+                  <span>🚀 تم الرفع والنشر</span>
+                </button>
+                <button type="button" class="action-btn-pill gray" style="flex: 1;" onclick="markProjectScheduled('${project.id}')">
+                  <span>📅 جدولة</span>
+                </button>
+              </div>
+              ${isScheduled ? `
+                <button type="button" class="action-btn-pill danger" style="padding: 4px; font-size: 10px;" onclick="cancelProjectSchedule('${project.id}')">
+                  <span>✕ إلغاء من التقويم</span>
+                </button>
+              ` : ''}
+            </div>
+          `;
+        }
+
+        return `
+          <div class="clean-phase-card ${isDone ? 'completed' : ''}" id="m-phase-${phase.id}">
+            <div class="phase-bar-header" onclick="toggleMobilePhase('${phase.id}')">
+              <div style="display: flex; align-items: center; gap: 8px; flex: 1;">
+                <span class="phase-badge-num">${isDone ? '✓' : phase.num}</span>
+                <span class="phase-bar-title">${phase.title}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span class="phase-counter-pill">${done}/${total}</span>
+                <span class="phase-chevron" style="${isCollapsed ? '' : 'transform: rotate(180deg);'}">▾</span>
+              </div>
+            </div>
+            <div class="phase-body-content ${isCollapsed ? 'collapsed' : ''}" id="m-body-${phase.id}">
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                ${phase.tasks.map(t => `
+                  <div class="task-check-row ${t.done ? 'done' : ''}" id="m-task-${phase.id}-${t.id}" onclick="toggleMobileTask('${project.id}', '${phase.id}', '${t.id}')">
+                    <div class="custom-checkbox-circle">${t.done ? '✓' : ''}</div>
+                    <span class="task-label-text">${escapeHtml(t.text)}</span>
+                  </div>
+                `).join('')}
+              </div>
+              ${extraHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleMobilePhase(phaseId) {
+      triggerHaptic('light');
+      const body = document.getElementById(`m-body-${phaseId}`);
+      if (body) {
+        body.classList.toggle('collapsed');
+        if (body.classList.contains('collapsed')) collapsedPhaseIds.add(phaseId);
+        else collapsedPhaseIds.delete(phaseId);
+      }
+      const project = AppStore.getProject(activeProjectId);
+      if (project) renderMobilePhases(project);
+    }
+
+    function toggleMobileTask(projId, phaseId, taskId) {
+      triggerHaptic('medium');
+      const project = AppStore.getProject(projId);
+      if (!project) return;
+      const phase = (project.phases || []).find(p => p.id === phaseId);
+      if (!phase) return;
+      const task = (phase.tasks || []).find(t => t.id === taskId);
+      if (!task) return;
+
+      task.done = !task.done;
+      AppStore.saveProjects(AppStore.projects);
+
+      const taskRow = document.getElementById(`m-task-${phaseId}-${taskId}`);
+      if (taskRow) {
+        taskRow.classList.toggle('done', task.done);
+        const checkCircle = taskRow.querySelector('.custom-checkbox-circle');
+        if (checkCircle) checkCircle.textContent = task.done ? '✓' : '';
+      }
+
+      const phaseCard = document.getElementById(`m-phase-${phaseId}`);
+      if (phaseCard) {
+        const total = phase.tasks.length;
+        const done = phase.tasks.filter(t => t.done).length;
+        const isDone = total > 0 && done === total;
+        phaseCard.classList.toggle('completed', isDone);
+        const numBadge = phaseCard.querySelector('.phase-badge-num');
+        if (numBadge) numBadge.textContent = isDone ? '✓' : phase.num;
+        const counter = phaseCard.querySelector('.phase-counter-pill');
+        if (counter) counter.textContent = `${done}/${total}`;
+      }
+
+      updateMobileProgress(project);
+    }
+
+    function updateMobileProgress(project) {
+      let total = 0, done = 0;
+      (project.phases || []).forEach(p => (p.tasks || []).forEach(t => { total++; if (t.done) done++; }));
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+      document.getElementById('ws-progress-pct').textContent = `${pct}%`;
+      document.getElementById('ws-progress-bar').style.width = `${pct}%`;
+      document.getElementById('ws-tasks-summary').textContent = `${done} من ${total} خطوات`;
+
+      const btnToggle = document.getElementById('txt-btn-toggle-all');
+      if (btnToggle) {
+        btnToggle.textContent = (total > 0 && done === total) ? '✕ إلغاء التحديد' : '✓ إكمال الكل';
+      }
+    }
+
+    function saveField(projId, field, val) {
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      p[field] = val;
+      AppStore.saveProjects(AppStore.projects);
+      showMobileToast('تم الحفظ');
+    }
+
+    function markProjectUploaded(projId) {
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      const dateInput = document.getElementById(`input-phase-pub-date-${projId}`);
+      p.status = 'Published';
+      p.publishDate = (dateInput && dateInput.value) ? dateInput.value : (p.publishDate || new Date().toISOString().split('T')[0]);
+      
+      const p7 = (p.phases || []).find(ph => ph.id === 'p7');
+      if (p7 && p7.tasks && p7.tasks[0]) p7.tasks[0].done = true;
+
+      AppStore.saveProjects(AppStore.projects);
+      triggerHaptic('heavy');
+      fireConfetti();
+      showMobileToast('تم رفع ونشر الفيديو 🚀');
+      renderMobilePhases(p);
+      updateMobileProgress(p);
+      renderMobileCalendar();
+    }
+
+    function markProjectScheduled(projId) {
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      const dateInput = document.getElementById(`input-phase-pub-date-${projId}`);
+      p.status = 'Scheduled';
+      p.publishDate = (dateInput && dateInput.value) ? dateInput.value : (p.publishDate || new Date().toISOString().split('T')[0]);
+      
+      const p7 = (p.phases || []).find(ph => ph.id === 'p7');
+      if (p7 && p7.tasks && p7.tasks[0]) p7.tasks[0].done = true;
+
+      AppStore.saveProjects(AppStore.projects);
+      triggerHaptic('medium');
+      showMobileToast('تمت الجدولة بالتقويم 📅');
+      renderMobilePhases(p);
+      updateMobileProgress(p);
+      renderMobileCalendar();
+    }
+
+    function cancelProjectSchedule(projId) {
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+      p.publishDate = null;
+      p.status = 'In Production';
+
+      const p7 = (p.phases || []).find(ph => ph.id === 'p7');
+      if (p7 && p7.tasks && p7.tasks[0]) p7.tasks[0].done = false;
+
+      AppStore.saveProjects(AppStore.projects);
+      triggerHaptic('medium');
+      showMobileToast('تم إلغاء الجدولة');
+      renderMobilePhases(p);
+      updateMobileProgress(p);
+      renderMobileCalendar();
+    }
+
+    /* CALENDAR (PUBLISH VIEW) */
+    function filterCalendarByDay(dateStr) {
+      triggerHaptic('light');
+      selectedCalendarDay = (selectedCalendarDay === dateStr) ? null : dateStr;
+      renderMobileCalendar();
+    }
+
+    function openCalendarEventEditor(projId) {
+      triggerHaptic('light');
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+
+      document.getElementById('cal-edit-proj-id').value = p.id;
+      document.getElementById('cal-edit-date-input').value = p.publishDate || new Date().toISOString().split('T')[0];
+      openSheet('sheet-edit-calendar-event');
+    }
+
+    function saveCalendarEventChanges() {
+      const projId = document.getElementById('cal-edit-proj-id').value;
+      const p = AppStore.getProject(projId);
+      if (!p) return;
+
+      const newDate = document.getElementById('cal-edit-date-input').value;
+      p.publishDate = newDate || new Date().toISOString().split('T')[0];
+      AppStore.saveProjects(AppStore.projects);
+
+      closeSheet('sheet-edit-calendar-event');
+      triggerHaptic('medium');
+      showMobileToast('تم تحديث الموعد');
+      renderMobileCalendar();
+    }
+
+    function removeCurrentEventFromCalendar() {
+      const projId = document.getElementById('cal-edit-proj-id').value;
+      cancelProjectSchedule(projId);
+      closeSheet('sheet-edit-calendar-event');
+    }
+
+    function renderMobileCalendar() {
+      const grid = document.getElementById('mobile-calendar-grid');
+      const eventsList = document.getElementById('mobile-calendar-events-list');
+      const badge = document.getElementById('cal-total-scheduled-badge');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const totalScheduled = AppStore.projects.filter(p => !!p.publishDate).length;
+      if (badge) badge.textContent = `${totalScheduled} مجدول`;
+
+      const today = new Date();
+      const currentDayNum = today.getDate();
+
+      for (let i = 1; i <= 31; i++) {
+        const dateStr = `2026-08-${String(i).padStart(2, '0')}`;
+        const dayEvents = AppStore.projects.filter(p => p.publishDate === dateStr);
+        const isToday = i === currentDayNum;
+        const isSelected = selectedCalendarDay === dateStr;
+
+        grid.innerHTML += `
+          <div class="cal-day-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" onclick="filterCalendarByDay('${dateStr}')">
+            <span class="cal-day-num">${i}</span>
+            ${dayEvents.length > 0 ? `<span class="cal-event-dot"></span>` : ''}
+          </div>
+        `;
+      }
+
+      let scheduledProjects = AppStore.projects.filter(p => !!p.publishDate);
+      if (selectedCalendarDay) {
+        scheduledProjects = scheduledProjects.filter(p => p.publishDate === selectedCalendarDay);
+      }
+
+      if (eventsList) {
+        if (scheduledProjects.length === 0) {
+          eventsList.innerHTML = `
+            <div style="padding: 12px; text-align: center; font-size: 11px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-sm);">
+              ${selectedCalendarDay ? 'لا توجد فيديوهات مسجلة في هذا اليوم' : 'لا توجد فيديوهات مجدولة حتى الآن'}
+            </div>
+          `;
+        } else {
+          eventsList.innerHTML = scheduledProjects.map(p => `
+            <div class="cal-event-item-card">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span class="badge-tag" style="color: #34d399;">${p.status === 'Published' ? '🚀 تم الرفع' : '📅 مجدول'}</span>
+                <span style="font-size: 11px; color: var(--text-secondary); font-weight: 700;">${p.publishDate}</span>
+              </div>
+              <span style="font-size: 13px; font-weight: 700; color: #fff;">${escapeHtml(p.title)}</span>
+              
+              <div style="display: flex; gap: 4px; justify-content: flex-end; margin-top: 4px;">
+                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px;" onclick="openCalendarEventEditor('${p.id}')">تعديل</button>
+                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px; color: #f87171;" onclick="cancelProjectSchedule('${p.id}')">إلغاء</button>
+                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px; background: var(--yt-red); color: #fff; border: none;" onclick="openMobileWorkspace('${p.id}')">فتح ←</button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    /* PROJECTS HUB SCREEN */
+    function renderMobileProjects() {
+      const list = document.getElementById('mobile-projects-list');
+      if (AppStore.projects.length === 0) {
+        list.innerHTML = `
+          <div style="background: var(--bg-card); border: 1px dashed var(--border-card); border-radius: var(--radius-lg); padding: 36px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <div style="width: 42px; height: 42px; border-radius: 50%; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; color: var(--text-secondary);">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <h3 style="font-size: 14px; font-weight: 800;">ما عندك مشاريع للحين</h3>
+            <button class="action-btn-pill red" style="width: auto; padding: 8px 18px; font-size: 12px;" onclick="startNewMobileProject()">
+              <span>+ فيديو جديد</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = AppStore.projects.map(p => {
+        let total = 0, done = 0;
+        (p.phases || []).forEach(ph => (ph.tasks || []).forEach(t => { total++; if (t.done) done++; }));
+        const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+        return `
+          <div class="project-item-card" onclick="openMobileWorkspace('${p.id}')">
+            <div class="card-top-header-row">
+              <span class="badge-tag">${p.platform || 'YouTube'}</span>
+              <span style="font-size: 11px; font-weight: 800; color: #34d399;">${pct}%</span>
+            </div>
+
+            <h3 class="card-title-text">${escapeHtml(p.title)}</h3>
+
+            <div class="ws-progress-track">
+              <div class="ws-progress-bar" style="width: ${pct}%;"></div>
+            </div>
+
+            <div class="card-bottom-actions-row">
+              <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">${done}/${total} خطوات</span>
+              
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button type="button" class="btn-delete-subtle" onclick="promptDeleteProject('${p.id}', event)" title="حذف">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                </button>
+                <span style="font-size: 11px; font-weight: 700; color: var(--yt-red);">فتح ←</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderMobileInspiration() {
+      const list = document.getElementById('mobile-inspiration-list');
+      if (AppStore.inspirations.length === 0) {
+        list.innerHTML = `
+          <div style="background: var(--bg-card); border: 1px dashed var(--border-card); border-radius: var(--radius-lg); padding: 36px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <h3 style="font-size: 14px; font-weight: 800;">ما فيه أفكار محفوظة</h3>
+            <button class="action-btn-pill gray" style="width: auto; padding: 8px 18px; font-size: 12px;" onclick="promptAddInspiration()">
+              <span>+ احفظ فكرة</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = AppStore.inspirations.map(insp => `
+        <div class="project-item-card">
+          <h4 style="font-size: 13px; font-weight: 700; color: #fff;">${escapeHtml(insp.title)}</h4>
+          ${insp.url ? `<a href="${escapeHtml(insp.url)}" target="_blank" style="font-size: 11px; color: var(--yt-red); text-decoration: none;">${escapeHtml(insp.url.slice(0, 36))}...</a>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function updateHomeBadges() {
+      const count = AppStore.projects.length;
+      const el = document.getElementById('txt-badge-projects-count');
+      if (el) el.textContent = `${count} مشاريع`;
+    }
+
+    function showMobileToast(msg) {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast-message';
+      toast.innerHTML = `<span>${escapeHtml(msg)}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-4px)';
+        toast.style.transition = 'all 160ms ease';
+        setTimeout(() => toast.remove(), 160);
+      }, 2200);
+    }
+
+    function fireConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      const particles = [];
+      const colors = ['#ff0033', '#ffffff', '#ffd700', '#00f2fe', '#a855f7', '#34d399'];
+
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 1.1) * 8,
+          size: Math.random() * 4 + 2,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 6,
+          alpha: 1
+        });
+      }
+
+      let frame = 0;
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.25;
+          p.rotation += p.rotationSpeed;
+          p.alpha -= 0.018;
+          if (p.alpha > 0) {
+            active = true;
+            ctx.save();
+            ctx.globalAlpha = p.alpha;
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+          }
+        });
+        frame++;
+        if (active && frame < 70) requestAnimationFrame(animate);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      animate();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    /* INITIALIZATION */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#proj-platform-chips .select-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          triggerHaptic('light');
+          document.querySelectorAll('#proj-platform-chips .select-chip').forEach(c => c.classList.remove('selected'));
+          chip.classList.add('selected');
+        });
+      });
+
+      document.getElementById('ws-input-title')?.addEventListener('input', (e) => {
+        if (activeProjectId) {
+          updateProjectTitle(activeProjectId, e.target.value);
+        }
+      });
+
+      updateHomeBadges();
+      initCollabRealtimeEngine();
+      initOtaUpdaterEngine();
+    });
+  </script>
+</body>
+</html>

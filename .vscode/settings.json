@@ -1,0 +1,37 @@
+{
+  "java.jdt.ls.java.home": "C:/Program Files/Android/Android Studio/jbr",
+  "java.import.gradle.java.home": "C:/Program Files/Android/Android Studio/jbr",
+  "java.import.gradle.wrapper.enabled": true,
+  "java.import.gradle.enabled": true,
+  "java.import.gradle.offline.enabled": false,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "disabled",
+  "java.autobuild.enabled": false,
+  "java.import.exclusions": [
+    "**/node_modules/**",
+    "**/.metadata/**",
+    "**/archetype-resources/**",
+    "**/META-INF/maven/**",
+    "**/www/**"
+  ],
+  "java.project.resourceFilters": [
+    "node_modules",
+    ".git",
+    "www"
+  ],
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "node_modules": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/build/**": true,
+    "**/.gradle/**": true,
+    "**/android/app/build/**": true
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "studioforge-creator-os",
+  "version": "1.0.0",
+  "description": "StudioForge - Mobile Creator OS for Video Production",
+  "main": "index.html",
+  "scripts": {
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('www')) fs.mkdirSync('www'); fs.copyFileSync('index.html','www/index.html'); fs.copyFileSync('styles.css','www/styles.css'); if(fs.existsSync('mqtt.min.js')) fs.copyFileSync('mqtt.min.js','www/mqtt.min.js');\"",
+    "cap:sync": "npm run build && npx cap sync android",
+    "cap:run": "npm run build && npx cap sync && npx cap run android",
+    "cap:open": "npm run build && npx cap sync && npx cap open android",
+    "patch:build": "npm run build && powershell -Command \"if (!(Test-Path 'patches')) { New-Item -ItemType Directory -Path 'patches' }; Compress-Archive -Path 'www\\*' -DestinationPath ('patches\\patch-v' + (Get-Content version.json | ConvertFrom-Json).version + '.zip') -Force; Write-Host 'Patch zip generated in patches/ directory!'\""
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/cli": "^8.5.0",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/local-notifications": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.3",
+    "@capgo/capacitor-updater": "^8.51.13",
+    "mqtt": "^5.15.2"
+  }
+}
