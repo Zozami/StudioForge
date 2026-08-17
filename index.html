@@ -96,7 +96,7 @@
           <div style="margin-top: 28px; margin-bottom: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;">
             <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 600; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-card);">
               <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #34d399;"></span>
-              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.6</strong></span>
+              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.7</strong></span>
             </div>
           </div>
         </section>
@@ -290,7 +290,7 @@
           <!-- Update & Data Controls -->
           <div style="display: flex; gap: 8px; margin-top: 16px;">
             <button type="button" class="action-btn-pill gray" style="flex: 1; font-size: 11px; padding: 8px;" onclick="checkManualOtaUpdate()">
-              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.6</span>)</span>
+              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.7</span>)</span>
             </button>
             <button type="button" class="action-btn-pill danger" style="flex: 1; font-size: 11px; padding: 8px;" onclick="clearAllUserData()">
               <span>مسح كل البيانات</span>
@@ -497,7 +497,7 @@
        PURE SAUDI ARABIC APP LOGIC & PRODUCTION REAL-TIME RELAY
        ========================================================================== -->
   <script>
-    const APP_BASE_VERSION = '1.0.6';
+    const APP_BASE_VERSION = '1.0.7';
     const STORAGE_KEY_PROJS = 'sf_clean_projects_v1';
     const STORAGE_KEY_INSPS = 'sf_clean_insps_v1';
     const STORAGE_KEY_MY_COLLAB = 'sf_my_collab_slots_v1';
@@ -1058,6 +1058,21 @@
       }
     }
 
+    function formatArabicDateWithDayName(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length < 3) return dateStr;
+      const d = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+      const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+      const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+
+      const dayName = days[d.getDay()];
+      const dayNum = d.getDate();
+      const monthName = months[d.getMonth()];
+
+      return `${dayName}، ${dayNum} ${monthName}`;
+    }
+
     /* COLLAB CALENDAR UI */
     function selectCollabDate(dateStr) {
       triggerHaptic('light');
@@ -1079,7 +1094,7 @@
       const cardEl = document.getElementById('collab-smart-day-card');
       const btnToggle = document.getElementById('btn-collab-smart-toggle');
 
-      if (titleEl) titleEl.textContent = `يوم: ${dateStr}`;
+      if (titleEl) titleEl.textContent = formatArabicDateWithDayName(dateStr);
 
       const isMyFree = !!AppStore.myCollabSlots[dateStr];
       const isFriendFree = !!AppStore.friendCollabSlots[dateStr];
@@ -1228,7 +1243,7 @@
             <div class="cal-event-item-card" style="border: 1px solid rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08));">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك</span>
-                <span style="font-size: 11px; font-weight: 800; color: #fff;">${date}</span>
+                <span style="font-size: 11px; font-weight: 800; color: #fff;">${formatArabicDateWithDayName(date)}</span>
               </div>
               <button type="button" class="action-btn-pill green" style="margin-top: 6px; padding: 6px; font-size: 11px;" onclick="confirmCollabSession('${date}')">
                 <span>🎮 تأكيد موعد جلسة التصوير</span>
@@ -1242,7 +1257,7 @@
     function confirmCollabSession(dateStr) {
       triggerHaptic('heavy');
       fireConfetti();
-      showMobileToast(`تم تأكيد جلسة التصوير ليوم ${dateStr}! 🎮`);
+      showMobileToast(`تم تأكيد جلسة التصوير ليوم ${formatArabicDateWithDayName(dateStr)}! 🎮`);
     }
 
     function promptChangeCollabKey() {
@@ -1802,7 +1817,7 @@
         if (scheduledProjects.length === 0) {
           eventsList.innerHTML = `
             <div style="padding: 12px; text-align: center; font-size: 11px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-sm);">
-              ${selectedCalendarDay ? 'لا توجد فيديوهات مسجلة في هذا اليوم' : 'لا توجد فيديوهات مجدولة حتى الآن'}
+              ${selectedCalendarDay ? `لا توجد فيديوهات في يوم ${formatArabicDateWithDayName(selectedCalendarDay)}` : 'لا توجد فيديوهات مجدولة حتى الآن'}
             </div>
           `;
         } else {
@@ -1810,7 +1825,7 @@
             <div class="cal-event-item-card">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span class="badge-tag" style="color: #34d399;">${p.status === 'Published' ? '🚀 تم الرفع' : '📅 مجدول'}</span>
-                <span style="font-size: 11px; color: var(--text-secondary); font-weight: 700;">${p.publishDate}</span>
+                <span style="font-size: 11px; color: var(--text-secondary); font-weight: 700;">${formatArabicDateWithDayName(p.publishDate)}</span>
               </div>
               <span style="font-size: 13px; font-weight: 700; color: #fff;">${escapeHtml(p.title)}</span>
               
