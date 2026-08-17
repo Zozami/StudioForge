@@ -96,7 +96,7 @@
           <div style="margin-top: 28px; margin-bottom: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;">
             <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 600; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-card);">
               <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #34d399;"></span>
-              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.2</strong></span>
+              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.3</strong></span>
             </div>
           </div>
         </section>
@@ -280,7 +280,7 @@
           <!-- Update & Data Controls -->
           <div style="display: flex; gap: 8px; margin-top: 16px;">
             <button type="button" class="action-btn-pill gray" style="flex: 1; font-size: 11px; padding: 8px;" onclick="checkManualOtaUpdate()">
-              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.0</span>)</span>
+              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.3</span>)</span>
             </button>
             <button type="button" class="action-btn-pill danger" style="flex: 1; font-size: 11px; padding: 8px;" onclick="clearAllUserData()">
               <span>مسح كل البيانات</span>
@@ -485,7 +485,7 @@
        PURE SAUDI ARABIC APP LOGIC & PRODUCTION REAL-TIME RELAY
        ========================================================================== -->
   <script>
-    const APP_BASE_VERSION = '1.0.2';
+    const APP_BASE_VERSION = '1.0.3';
     const STORAGE_KEY_PROJS = 'sf_clean_projects_v1';
     const STORAGE_KEY_INSPS = 'sf_clean_insps_v1';
     const STORAGE_KEY_MY_COLLAB = 'sf_my_collab_slots_v1';
@@ -786,6 +786,11 @@
         } catch (e) {
           console.warn('CapacitorUpdater notifyAppReady:', e);
         }
+      }
+
+      const storedVer = localStorage.getItem(STORAGE_KEY_APP_VER);
+      if (!storedVer || compareSemver(APP_BASE_VERSION, storedVer) > 0) {
+        localStorage.setItem(STORAGE_KEY_APP_VER, APP_BASE_VERSION);
       }
 
       syncAllVersionBadges();
