@@ -847,68 +847,75 @@ html, body {
   border: 1px solid rgba(245, 158, 11, 0.4);
 }
 
-/* Collab Selected Day Status Card */
-.collab-day-inspector {
+/* Streamlined Collab Day Card */
+.collab-smart-day-card {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: 12px 14px;
   margin-top: -4px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition: all var(--transition-fast);
 }
 
-.collab-status-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.collab-smart-day-card.match-active {
+  border-color: rgba(245, 158, 11, 0.4);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08));
 }
 
-.collab-user-status-box {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.collab-user-status-box.active-free {
-  border-color: rgba(52, 211, 153, 0.5);
-  background: rgba(16, 185, 129, 0.1);
-}
-
-.collab-user-status-box.friend-free {
-  border-color: rgba(192, 132, 252, 0.5);
-  background: rgba(168, 85, 247, 0.1);
-}
-
-.collab-match-banner {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.18), rgba(16, 185, 129, 0.18));
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #fbbf24;
-}
-
-/* Clean Minimal Collab Bar */
-.collab-pair-strip {
+.collab-day-header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--bg-input);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-sm);
-  padding: 8px 12px;
-  margin-bottom: 10px;
-  font-size: 11px;
+}
+
+.collab-smart-toggle-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+.collab-smart-toggle-btn.state-free {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: #34d399;
+  color: #34d399;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.15);
+}
+
+.collab-smart-toggle-btn.state-busy {
+  background: var(--bg-elevated);
+  border-color: var(--border-card);
+  color: var(--text-primary);
+}
+
+.collab-smart-toggle-btn:active {
+  transform: scale(0.97);
+}
+
+/* Inline Room Header Tag */
+.collab-room-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(147, 51, 234, 0.12);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 10px;
+  color: #c084fc;
+  cursor: pointer;
 }
 
 /* Event List Card */

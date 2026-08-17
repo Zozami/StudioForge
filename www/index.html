@@ -96,7 +96,7 @@
           <div style="margin-top: 28px; margin-bottom: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;">
             <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 600; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-card);">
               <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #34d399;"></span>
-              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.4</strong></span>
+              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.5</strong></span>
             </div>
           </div>
         </section>
@@ -216,27 +216,22 @@
 
           <!-- TAB 2: COLLAB & AVAILABILITY CALENDAR -->
           <div id="view-collab-calendar" style="display: none;">
-            <!-- Pairing Strip with Real-Time Indicator -->
-            <div class="collab-pair-strip">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <span style="color: var(--text-muted);">الغرفة:</span>
-                <strong style="color: #c084fc; font-family: monospace;" id="display-collab-room-key">FORGE-AZ</strong>
-                <span id="collab-live-status-indicator" style="font-size: 10px; font-weight: 700; color: #34d399;">🟢 متصل</span>
-              </div>
-              <div style="display: flex; gap: 4px;">
-                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px;" onclick="promptChangeCollabKey()">تغيير</button>
-                <button type="button" class="touch-pill-btn" style="padding: 2px 8px; font-size: 10px; background: var(--collab-purple); color:#fff; border:none;" onclick="copyCollabRoomKey()">نسخ 🔗</button>
-              </div>
-            </div>
-
             <!-- Collab Calendar Widget -->
             <div class="calendar-widget-card" style="border-color: rgba(147, 51, 234, 0.25);">
+              <!-- Clean Integrated Header -->
               <div class="calendar-month-header">
-                <span class="cal-month-title">أغسطس 2026 — جدول التفرغ</span>
-                <span class="badge-tag" id="collab-matches-badge" style="color: #f59e0b; font-weight: 800;">0 أوقات مشتركة</span>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span class="cal-month-title">أغسطس 2026</span>
+                  <span id="collab-live-status-indicator" style="font-size: 10px; font-weight: 700; color: #34d399;">🟢 متصل</span>
+                </div>
+                <div class="collab-room-tag" onclick="promptChangeCollabKey()" title="تغيير أو نسخ رمز الغرفة">
+                  <span>الغرفة:</span>
+                  <strong style="font-family: monospace;" id="display-collab-room-key">FORGE-AZ</strong>
+                  <span>🔗</span>
+                </div>
               </div>
 
-              <!-- Clear Color Legend -->
+              <!-- High-Contrast Legend Strip -->
               <div class="collab-legend-strip">
                 <div class="collab-legend-item">
                   <span class="legend-dot me"></span>
@@ -267,47 +262,25 @@
               </div>
             </div>
 
-            <!-- Rich Multi-State Day Inspector & Action Buttons -->
-            <div class="collab-day-inspector" id="collab-day-inspector-card">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-size: 13px; font-weight: 800; color: #fff;" id="collab-selected-date-title">يوم: 2026-08-20</span>
-                <span id="collab-selected-day-tag" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">اختر يوماً</span>
+            <!-- Unified Single-Tap Day Card & Smart Action Button -->
+            <div class="collab-smart-day-card" id="collab-smart-day-card">
+              <div class="collab-day-header-row">
+                <div style="display: flex; flex-direction: column; gap: 2px;">
+                  <span style="font-size: 13px; font-weight: 800; color: #fff;" id="collab-selected-date-title">يوم: 2026-08-20</span>
+                  <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary);" id="collab-selected-status-summary">اضغط على أي يوم لاختياره</span>
+                </div>
+                <span class="badge-tag" id="collab-match-pill-badge" style="display: none; color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك</span>
               </div>
 
-              <!-- Dual Status Grid -->
-              <div class="collab-status-grid">
-                <div class="collab-user-status-box" id="box-my-day-status">
-                  <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">👤 حالتك:</span>
-                  <span style="font-size: 12px; font-weight: 800;" id="txt-my-day-status">غير محدد (مشغول)</span>
-                </div>
-                <div class="collab-user-status-box" id="box-friend-day-status">
-                  <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">👥 حالة خويك:</span>
-                  <span style="font-size: 12px; font-weight: 800;" id="txt-friend-day-status">غير محدد (مشغول)</span>
-                </div>
-              </div>
-
-              <!-- Match Celebration Callout (Shown when both free) -->
-              <div id="collab-match-banner-container" style="display: none;">
-                <div class="collab-match-banner">
-                  <span style="font-size: 16px;">🎯</span>
-                  <span><strong>وقت مشترك مثالي!</strong> كلاكما متاح للتصوير أو المونتاج معاً.</span>
-                </div>
-              </div>
-
-              <!-- 1-Click Toggle Buttons -->
-              <div style="display: flex; gap: 6px;">
-                <button type="button" class="action-btn-pill green" id="btn-collab-set-free" style="flex: 1.4;" onclick="saveMyCollabSlot(true)">
-                  <span>🟢 أنا متاح في هذا اليوم</span>
-                </button>
-                <button type="button" class="action-btn-pill gray" id="btn-collab-set-busy" style="flex: 0.8;" onclick="saveMyCollabSlot(false)">
-                  <span>🔒 مشغول</span>
-                </button>
-              </div>
+              <!-- Single Smart Action Button (Toggles between Free & Busy) -->
+              <button type="button" class="collab-smart-toggle-btn state-busy" id="btn-collab-smart-toggle" onclick="toggleMyCollabSlot()">
+                <span>🟢 سجّل أنك متاح في هذا اليوم</span>
+              </button>
             </div>
 
-            <!-- Matching Free Slots List -->
-            <div style="margin-top: 14px; margin-bottom: 16px;">
-              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #fff;">🎯 الأوقات المشتركة المسجلة:</h3>
+            <!-- Matched Free Slots List -->
+            <div id="collab-matches-section" style="margin-top: 14px; margin-bottom: 16px;">
+              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #fff;" id="collab-matches-header-title">🎯 الأوقات المشتركة المسجلة (0):</h3>
               <div id="collab-matches-list">
                 <!-- Rendered via JS -->
               </div>
@@ -317,7 +290,7 @@
           <!-- Update & Data Controls -->
           <div style="display: flex; gap: 8px; margin-top: 16px;">
             <button type="button" class="action-btn-pill gray" style="flex: 1; font-size: 11px; padding: 8px;" onclick="checkManualOtaUpdate()">
-              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.4</span>)</span>
+              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.5</span>)</span>
             </button>
             <button type="button" class="action-btn-pill danger" style="flex: 1; font-size: 11px; padding: 8px;" onclick="clearAllUserData()">
               <span>مسح كل البيانات</span>
@@ -522,7 +495,7 @@
        PURE SAUDI ARABIC APP LOGIC & PRODUCTION REAL-TIME RELAY
        ========================================================================== -->
   <script>
-    const APP_BASE_VERSION = '1.0.4';
+    const APP_BASE_VERSION = '1.0.5';
     const STORAGE_KEY_PROJS = 'sf_clean_projects_v1';
     const STORAGE_KEY_INSPS = 'sf_clean_insps_v1';
     const STORAGE_KEY_MY_COLLAB = 'sf_my_collab_slots_v1';
@@ -1084,15 +1057,18 @@
       updateCollabSlotEditor(dateStr);
     }
 
+    function toggleMyCollabSlot() {
+      if (!selectedCollabDay) return;
+      const isCurrentlyFree = !!AppStore.myCollabSlots[selectedCollabDay];
+      saveMyCollabSlot(!isCurrentlyFree);
+    }
+
     function updateCollabSlotEditor(dateStr) {
       const titleEl = document.getElementById('collab-selected-date-title');
-      const tagEl = document.getElementById('collab-selected-day-tag');
-      const myBox = document.getElementById('box-my-day-status');
-      const myText = document.getElementById('txt-my-day-status');
-      const friendBox = document.getElementById('box-friend-day-status');
-      const friendText = document.getElementById('txt-friend-day-status');
-      const bannerContainer = document.getElementById('collab-match-banner-container');
-      const btnFree = document.getElementById('btn-collab-set-free');
+      const summaryEl = document.getElementById('collab-selected-status-summary');
+      const matchPill = document.getElementById('collab-match-pill-badge');
+      const cardEl = document.getElementById('collab-smart-day-card');
+      const btnToggle = document.getElementById('btn-collab-smart-toggle');
 
       if (titleEl) titleEl.textContent = `يوم: ${dateStr}`;
 
@@ -1100,54 +1076,34 @@
       const isFriendFree = !!AppStore.friendCollabSlots[dateStr];
       const isMatch = isMyFree && isFriendFree;
 
-      if (tagEl) {
+      if (cardEl) {
+        cardEl.classList.toggle('match-active', isMatch);
+      }
+
+      if (matchPill) {
+        matchPill.style.display = isMatch ? 'inline-block' : 'none';
+      }
+
+      if (summaryEl) {
         if (isMatch) {
-          tagEl.textContent = '🎯 وقت مشترك!';
-          tagEl.style.color = '#fbbf24';
+          summaryEl.innerHTML = '<strong style="color: #fbbf24;">🎯 متفرغان معاً اليوم! (جاهزون للتصوير والعمل 🎬)</strong>';
         } else if (isMyFree && !isFriendFree) {
-          tagEl.textContent = '🟢 أنت متاح فقط';
-          tagEl.style.color = '#34d399';
+          summaryEl.innerHTML = '<span style="color: #34d399;">🟢 أنت مسجل كمتاح</span> • <span style="color: var(--text-muted);">بانتظار خويك</span>';
         } else if (!isMyFree && isFriendFree) {
-          tagEl.textContent = '🟣 خويك متفرغ';
-          tagEl.style.color = '#c084fc';
+          summaryEl.innerHTML = '<span style="color: #c084fc;">🟣 خويك متفرغ اليوم</span> • <span style="color: var(--text-muted);">اضغط للربط معه</span>';
         } else {
-          tagEl.textContent = '🔒 غير محدد / مشغول';
-          tagEl.style.color = 'var(--text-muted)';
+          summaryEl.innerHTML = '<span style="color: var(--text-muted);">🔒 يوم غير محدد (مشغول للطرفين)</span>';
         }
       }
 
-      if (myBox && myText) {
+      if (btnToggle) {
         if (isMyFree) {
-          myBox.classList.add('active-free');
-          myText.textContent = '🟢 متاح للتصوير';
-          myText.style.color = '#34d399';
+          btnToggle.className = 'collab-smart-toggle-btn state-free';
+          btnToggle.innerHTML = '<span>✓ أنت مسجل كمتاح (اضغط للإلغاء)</span>';
         } else {
-          myBox.classList.remove('active-free');
-          myText.textContent = '🔒 مشغول / غير محدد';
-          myText.style.color = 'var(--text-muted)';
+          btnToggle.className = 'collab-smart-toggle-btn state-busy';
+          btnToggle.innerHTML = '<span>🟢 سجّل أنك متاح في هذا اليوم</span>';
         }
-      }
-
-      if (friendBox && friendText) {
-        if (isFriendFree) {
-          friendBox.classList.add('friend-free');
-          friendText.textContent = '🟣 متاح للتصوير';
-          friendText.style.color = '#c084fc';
-        } else {
-          friendBox.classList.remove('friend-free');
-          friendText.textContent = '🔒 غير محدد';
-          friendText.style.color = 'var(--text-muted)';
-        }
-      }
-
-      if (bannerContainer) {
-        bannerContainer.style.display = isMatch ? 'block' : 'none';
-      }
-
-      if (btnFree) {
-        btnFree.innerHTML = isMyFree
-          ? '<span>✓ أنت مسجل كمتاح (اضغط للتأكيد)</span>'
-          : '<span>🟢 أنا متاح في هذا اليوم</span>';
       }
     }
 
@@ -1178,7 +1134,7 @@
         mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
         triggerHaptic('heavy');
         if (isFree) fireConfetti();
-        showMobileToast(isFree ? 'تم بث تفرغك وإرسال الإشعار لخويك 🚀' : 'تم تعيين اليوم كمشغول');
+        showMobileToast(isFree ? 'تم بث تفرغك وإرسال الإشعار لخويك 🚀' : 'تم إلغاء التفرغ لهذا اليوم');
       } else {
         showMobileToast('جاري الاتصال بالشبكة، يرجى المحاولة بعد قليل');
       }
@@ -1186,8 +1142,9 @@
 
     function renderCollabCalendar() {
       const grid = document.getElementById('collab-calendar-grid');
-      const matchesBadge = document.getElementById('collab-matches-badge');
+      const matchesHeader = document.getElementById('collab-matches-header-title');
       const matchesList = document.getElementById('collab-matches-list');
+      const matchesSection = document.getElementById('collab-matches-section');
       if (!grid) return;
       grid.innerHTML = '';
 
@@ -1251,26 +1208,18 @@
         `;
       }
 
-      if (matchesBadge) matchesBadge.textContent = `${matchesCount} أوقات مشتركة 🎯`;
+      if (matchesHeader) matchesHeader.textContent = `🎯 الأوقات المشتركة المسجلة (${matchesCount}):`;
 
       if (matchesList) {
         if (matchesArray.length === 0) {
-          matchesList.innerHTML = `
-            <div style="padding: 14px; text-align: center; font-size: 11px; color: var(--text-muted); background: var(--bg-card); border-radius: var(--radius-sm); border: 1px dashed var(--border-card);">
-              لا توجد أوقات تصوير مشتركة حتى الآن. حدد تفرغك بالأعلى لمطابقة خويك!
-            </div>
-          `;
+          if (matchesSection) matchesSection.style.display = 'none';
         } else {
+          if (matchesSection) matchesSection.style.display = 'block';
           matchesList.innerHTML = matchesArray.map(date => `
             <div class="cal-event-item-card" style="border: 1px solid rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08));">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك مع خويك</span>
+                <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك</span>
                 <span style="font-size: 11px; font-weight: 800; color: #fff;">${date}</span>
-              </div>
-              <div style="display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
-                <span>🟢 أنت متاح</span>
-                <span>•</span>
-                <span>🟣 خويك متاح</span>
               </div>
               <button type="button" class="action-btn-pill green" style="margin-top: 6px; padding: 6px; font-size: 11px;" onclick="confirmCollabSession('${date}')">
                 <span>🎮 تأكيد موعد جلسة التصوير</span>
