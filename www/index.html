@@ -1059,8 +1059,22 @@
             const payload = JSON.parse(msgBuffer.toString());
             console.log('Received collab payload:', payload);
 
-            // CRITICAL CHECK: Ignore our own messages! Only process when sent by our friend!
+            // 1. Separate handler for OTA_UPDATE broadcast messages
+            if (payload.type === 'OTA_UPDATE') {
+              console.log('Received OTA update signal via MQTT:', payload.version);
+              const currentVer = localStorage.getItem(STORAGE_KEY_APP_VER) || '1.0.0';
+              if (payload.version && compareSemver(payload.version, currentVer) > 0) {
+                showMobileToast(`🚀 يتوفر تحديث جديد: v${payload.version} (افحص التحديثات بالجدول)`);
+              }
+              return;
+            }
+
+            // 2. Schedule Collab Messages (MUST have a valid date & not be sent by our own device)
             if (!payload || payload.senderId === myDeviceId) {
+              return;
+            }
+
+            if (!payload.date && !payload.allSlots) {
               return;
             }
 
@@ -1083,28 +1097,32 @@
             renderCollabCalendar();
             updateCollabSlotEditor(selectedCollabDay);
 
-            const receivedSlot = payload.timeSlot;
-            const timeText = receivedSlot ? `من ${formatTimeArabic12h(receivedSlot.startTime)} إلى ${formatTimeArabic12h(receivedSlot.endTime)}` : '';
+            // Only fire notification/toast if payload actually refers to a specific date
+            if (payload.date) {
+              const receivedSlot = payload.timeSlot;
+              const timeText = receivedSlot ? `من ${formatTimeArabic12h(receivedSlot.startTime)} إلى ${formatTimeArabic12h(receivedSlot.endTime)}` : '';
+              const arabicDateFormatted = formatArabicDateWithDayName(payload.date);
 
-            // TRIGGER NATIVE LOCAL NOTIFICATION ON FRIEND'S PHONE!
-            if (window.Capacitor?.Plugins?.LocalNotifications) {
-              try {
-                await window.Capacitor.Plugins.LocalNotifications.schedule({
-                  notifications: [
-                    {
-                      title: "🎮 استوديو فورج | دعوة تعاون وتصوير",
-                      body: receivedSlot
-                        ? `خويك أصبح متاحاً للتعاون يوم ${formatArabicDateWithDayName(payload.date)} (${timeText})! 🚀`
-                        : `خويك حدّث جدول تفرغه ليوم ${formatArabicDateWithDayName(payload.date)}`,
-                      id: Math.floor(Math.random() * 100000),
-                      schedule: { at: new Date(Date.now() + 100) }
-                    }
-                  ]
-                });
-              } catch(e) {}
+              // TRIGGER NATIVE LOCAL NOTIFICATION ON FRIEND'S PHONE!
+              if (window.Capacitor?.Plugins?.LocalNotifications) {
+                try {
+                  await window.Capacitor.Plugins.LocalNotifications.schedule({
+                    notifications: [
+                      {
+                        title: "🎮 استوديو فورج | دعوة تعاون وتصوير",
+                        body: receivedSlot
+                          ? `خويك أصبح متاحاً للتعاون يوم ${arabicDateFormatted} (${timeText})! 🚀`
+                          : `خويك حدّث جدول تفرغه ليوم ${arabicDateFormatted}`,
+                        id: Math.floor(Math.random() * 100000),
+                        schedule: { at: new Date(Date.now() + 100) }
+                      }
+                    ]
+                  });
+                } catch(e) {}
+              }
+
+              showMobileToast(receivedSlot ? `🔔 خويك متاح يوم ${arabicDateFormatted} (${timeText})!` : `خويك غير متاح يوم ${arabicDateFormatted}`);
             }
-
-            showMobileToast(receivedSlot ? `🔔 خويك متاح يوم ${formatArabicDateWithDayName(payload.date)} (${timeText})!` : `خويك غير متاح يوم ${formatArabicDateWithDayName(payload.date)}`);
           } catch(err) {
             console.error('Error handling collab message:', err);
           }
