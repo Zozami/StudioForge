@@ -871,89 +871,111 @@ html, body {
   justify-content: space-between;
 }
 
-/* Custom Exact Time Range Picker */
-.collab-custom-time-box {
+/* Clean Stepper Rows for Fast Time Adjustment */
+.collab-steppers-container {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 8px;
   background: var(--bg-elevated);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  margin-top: 4px;
+  padding: 10px 12px;
+  margin-top: 2px;
 }
 
-.time-input-group {
+.stepper-row {
   display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 4px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.time-input-label {
-  font-size: 10px;
+.stepper-label {
+  font-size: 12px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
-.time-picker-native {
-  width: 100%;
+.stepper-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: var(--bg-card);
   border: 1px solid var(--border-card);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-pill);
+  padding: 3px 6px;
+}
+
+.stepper-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-card);
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
-  padding: 6px 8px;
-  text-align: center;
-  font-family: monospace, inherit;
-  outline: none;
-  cursor: pointer;
-  direction: ltr;
-  transition: all var(--transition-fast);
-}
-
-.time-picker-native:focus {
-  border-color: #34d399;
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.2);
-}
-
-.time-arrow-separator {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  color: var(--text-muted);
-  font-weight: 800;
-  padding-top: 14px;
-}
-
-/* Quick Time Shift Pills */
-.time-quick-pills-row {
-  display: flex;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.time-quick-pill {
-  flex: 1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-card);
-  border-radius: var(--radius-pill);
-  padding: 4px 6px;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-secondary);
   cursor: pointer;
   font-family: inherit;
-  text-align: center;
   transition: all var(--transition-fast);
 }
 
-.time-quick-pill:hover, .time-quick-pill:active {
-  background: rgba(52, 211, 153, 0.12);
+.stepper-btn:active {
+  background: rgba(52, 211, 153, 0.2);
   border-color: #34d399;
-  color: #34d399;
+  transform: scale(0.92);
+}
+
+.stepper-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  min-width: 65px;
+  text-align: center;
+  font-family: monospace, inherit;
+}
+
+/* Single Smart Toggle Button for Collab Availability */
+.collab-smart-toggle-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all var(--transition-fast);
+  margin-top: 4px;
+  outline: none;
+}
+
+.collab-smart-toggle-btn.state-busy {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.collab-smart-toggle-btn.state-busy:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15);
+}
+
+.collab-smart-toggle-btn.state-free {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.collab-smart-toggle-btn.state-free:active {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(0.98);
 }
 
 /* Inline Room Header Tag */

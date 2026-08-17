@@ -222,16 +222,15 @@
               <div class="calendar-month-header">
                 <div style="display: flex; align-items: center; gap: 6px;">
                   <span class="cal-month-title">أغسطس 2026</span>
-                  <span id="collab-live-status-indicator" style="font-size: 10px; font-weight: 700; color: #34d399;">🟢 متصل</span>
+                  <span id="collab-live-status-indicator" style="font-size: 10px; font-weight: 700; color: #34d399;">متصل</span>
                 </div>
                 <div class="collab-room-tag" onclick="promptChangeCollabKey()" title="تغيير أو نسخ رمز الغرفة">
                   <span>الغرفة:</span>
                   <strong style="font-family: monospace;" id="display-collab-room-key">FORGE-AZ</strong>
-                  <span>🔗</span>
                 </div>
               </div>
 
-              <!-- High-Contrast Legend Strip -->
+              <!-- High-Contrast Legend Strip (Emoji-Free) -->
               <div class="collab-legend-strip">
                 <div class="collab-legend-item">
                   <span class="legend-dot me"></span>
@@ -239,11 +238,11 @@
                 </div>
                 <div class="collab-legend-item">
                   <span class="legend-dot friend"></span>
-                  <span>خويي متاح</span>
+                  <span>الطرف الآخر</span>
                 </div>
                 <div class="collab-legend-item">
                   <span class="legend-dot match"></span>
-                  <span style="color: #fbbf24;">متفرغان معاً 🎯</span>
+                  <span style="color: #fbbf24;">تطابق مشترك</span>
                 </div>
               </div>
 
@@ -262,59 +261,51 @@
               </div>
             </div>
 
-            <!-- Unified Day Availability & Custom Exact Time Range Picker -->
+            <!-- Unified Day Card with 2-Line Steppers & 1 Single Toggle Button -->
             <div class="collab-smart-day-card" id="collab-smart-day-card">
               <div class="collab-day-header-row">
                 <div style="display: flex; flex-direction: column; gap: 2px;">
                   <span style="font-size: 13px; font-weight: 800; color: #fff;" id="collab-selected-date-title">الخميس، 20 أغسطس</span>
                   <span style="font-size: 11px; font-weight: 600; color: var(--text-secondary);" id="collab-selected-status-summary">حدد ساعات تفرغك اليوم:</span>
                 </div>
-                <span class="badge-tag" id="collab-match-pill-badge" style="display: none; color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت مشترك</span>
+                <span class="badge-tag" id="collab-match-pill-badge" style="display: none; color: #fbbf24; background: rgba(245, 158, 11, 0.2);">تطابق مشترك</span>
               </div>
 
-              <!-- Custom Time Range Input Box -->
-              <div class="collab-custom-time-box">
-                <div class="time-input-group">
-                  <label class="time-input-label">من الساعة</label>
-                  <input type="time" class="time-picker-native" id="input-collab-start-time" onchange="autoSaveCollabTimeSlot()" value="16:00">
+              <!-- 2 Stepper Lines (Zero Popups, Fast +/- Adjustment) -->
+              <div class="collab-steppers-container">
+                <div class="stepper-row">
+                  <span class="stepper-label">وقت البداية</span>
+                  <div class="stepper-controls">
+                    <button type="button" class="stepper-btn" onclick="stepCollabTime('start', -30)">−</button>
+                    <span class="stepper-val" id="disp-collab-start-time">04:00 م</span>
+                    <button type="button" class="stepper-btn" onclick="stepCollabTime('start', 30)">+</button>
+                  </div>
                 </div>
 
-                <div class="time-arrow-separator">
-                  <span>←</span>
+                <div class="stepper-row">
+                  <span class="stepper-label">وقت النهاية</span>
+                  <div class="stepper-controls">
+                    <button type="button" class="stepper-btn" onclick="stepCollabTime('end', -30)">−</button>
+                    <span class="stepper-val" id="disp-collab-end-time">08:00 م</span>
+                    <button type="button" class="stepper-btn" onclick="stepCollabTime('end', 30)">+</button>
+                  </div>
                 </div>
-
-                <div class="time-input-group">
-                  <label class="time-input-label">إلى الساعة</label>
-                  <input type="time" class="time-picker-native" id="input-collab-end-time" onchange="autoSaveCollabTimeSlot()" value="21:00">
-                </div>
               </div>
 
-              <!-- Quick Time Preset Helpers (Super Fast 1-Tap Fill) -->
-              <div class="time-quick-pills-row">
-                <button type="button" class="time-quick-pill" onclick="quickSetCollabTime('16:00', '20:00')">4:00م - 8:00م</button>
-                <button type="button" class="time-quick-pill" onclick="quickSetCollabTime('19:00', '23:30')">7:00م - 11:30م</button>
-                <button type="button" class="time-quick-pill" onclick="quickSetCollabTime('10:00', '14:00')">10:00ص - 2:00م</button>
-              </div>
-
-              <!-- Primary 1-Click Action Buttons -->
-              <div style="display: flex; gap: 6px; margin-top: 2px;">
-                <button type="button" class="action-btn-pill green" id="btn-collab-save-time" style="flex: 1.4; padding: 10px;" onclick="saveMyCustomTimeSlot()">
-                  <span>🟢 أنا متاح في هذا الوقت</span>
-                </button>
-                <button type="button" class="action-btn-pill gray" id="btn-collab-clear-time" style="flex: 0.8; padding: 10px;" onclick="clearMyCustomTimeSlot()">
-                  <span>🔒 غير متاح</span>
-                </button>
-              </div>
+              <!-- ONE SINGLE SMART ACTION BUTTON -->
+              <button type="button" class="collab-smart-toggle-btn state-busy" id="btn-collab-smart-toggle" onclick="toggleMyCollabTimeSlot()">
+                <span>تحديد التفرغ في هذا الوقت</span>
+              </button>
 
               <!-- Friend Exact Availability Hours Line -->
               <div style="font-size: 11px; font-weight: 600; color: var(--text-muted); padding-top: 6px; border-top: 1px solid var(--border-card);" id="collab-friend-time-summary">
-                🟣 خويك لم يحدد وقته لهذا اليوم بعد
+                الطرف الآخر لم يحدد وقته لهذا اليوم بعد
               </div>
             </div>
 
             <!-- Matched Free Slots List -->
             <div id="collab-matches-section" style="margin-top: 14px; margin-bottom: 16px;">
-              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #fff;" id="collab-matches-header-title">🎯 الأوقات المشتركة المسجلة (0):</h3>
+              <h3 style="font-size: 13px; font-weight: 800; margin-bottom: 8px; color: #fff;" id="collab-matches-header-title">الأوقات المشتركة المتطابقة (0):</h3>
               <div id="collab-matches-list">
                 <!-- Rendered via JS -->
               </div>
@@ -1109,10 +1100,10 @@
                   await window.Capacitor.Plugins.LocalNotifications.schedule({
                     notifications: [
                       {
-                        title: "🎮 استوديو فورج | دعوة تعاون وتصوير",
+                        title: "استوديو فورج | جدول التعاون والتصوير",
                         body: receivedSlot
-                          ? `خويك أصبح متاحاً للتعاون يوم ${arabicDateFormatted} (${timeText})! 🚀`
-                          : `خويك حدّث جدول تفرغه ليوم ${arabicDateFormatted}`,
+                          ? `الطرف الآخر أصبح متاحاً للتعاون يوم ${arabicDateFormatted} (${timeText})`
+                          : `الطرف الآخر حدّث جدول تفرغه ليوم ${arabicDateFormatted}`,
                         id: Math.floor(Math.random() * 100000),
                         schedule: { at: new Date(Date.now() + 100) }
                       }
@@ -1121,7 +1112,7 @@
                 } catch(e) {}
               }
 
-              showMobileToast(receivedSlot ? `🔔 خويك متاح يوم ${arabicDateFormatted} (${timeText})!` : `خويك غير متاح يوم ${arabicDateFormatted}`);
+              showMobileToast(receivedSlot ? `الطرف الآخر متاح يوم ${arabicDateFormatted} (${timeText})` : `الطرف الآخر غير متاح يوم ${arabicDateFormatted}`);
             }
           } catch(err) {
             console.error('Error handling collab message:', err);
@@ -1148,28 +1139,36 @@
       return `${dayName}، ${dayNum} ${monthName}`;
     }
 
+    let collabStartTimeMinutes = 960; // 16:00 (04:00 PM)
+    let collabEndTimeMinutes = 1200;  // 20:00 (08:00 PM)
+
     function timeToMinutes(hhmm) {
       if (!hhmm) return 0;
-      const [h, m] = hhmm.split(':').map(Number);
-      return (h || 0) * 60 + (m || 0);
+      const parts = hhmm.split(':');
+      return (parseInt(parts[0], 10) || 0) * 60 + (parseInt(parts[1], 10) || 0);
     }
 
     function minutesToTime(mins) {
-      const h = Math.floor(mins / 60) % 24;
-      const m = mins % 60;
+      const normalized = ((mins % 1440) + 1440) % 1440;
+      const h = Math.floor(normalized / 60);
+      const m = normalized % 60;
       return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
     }
 
-    function formatTimeArabic12h(hhmm) {
-      if (!hhmm) return '';
-      const [hStr, mStr] = hhmm.split(':');
-      let h = parseInt(hStr, 10);
-      const m = mStr || '00';
+    function formatTimeMinutesArabic(mins) {
+      const normalized = ((mins % 1440) + 1440) % 1440;
+      let h = Math.floor(normalized / 60);
+      const m = normalized % 60;
       const isPm = h >= 12;
       if (h === 0) h = 12;
       else if (h > 12) h -= 12;
       const period = isPm ? 'م' : 'ص';
-      return `${h}:${m} ${period}`;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')} ${period}`;
+    }
+
+    function formatTimeArabic12h(hhmm) {
+      if (!hhmm) return '';
+      return formatTimeMinutesArabic(timeToMinutes(hhmm));
     }
 
     function getSlotTimeRange(slot) {
@@ -1178,7 +1177,7 @@
         return { startTime: slot.startTime, endTime: slot.endTime };
       }
       if (slot === true || slot.periods) {
-        return { startTime: '16:00', endTime: '21:00' };
+        return { startTime: '16:00', endTime: '20:00' };
       }
       return null;
     }
@@ -1201,8 +1200,8 @@
         return {
           startTime: minutesToTime(overlapStart),
           endTime: minutesToTime(overlapEnd),
-          startFormatted: formatTimeArabic12h(minutesToTime(overlapStart)),
-          endFormatted: formatTimeArabic12h(minutesToTime(overlapEnd)),
+          startFormatted: formatTimeMinutesArabic(overlapStart),
+          endFormatted: formatTimeMinutesArabic(overlapEnd),
           durationText: durText
         };
       }
@@ -1217,95 +1216,107 @@
       updateCollabSlotEditor(dateStr);
     }
 
-    function saveMyCustomTimeSlot() {
-      if (!selectedCollabDay) return;
-      const startInput = document.getElementById('input-collab-start-time');
-      const endInput = document.getElementById('input-collab-end-time');
+    function stepCollabTime(type, deltaMinutes) {
+      triggerHaptic('light');
 
-      const startTime = startInput ? startInput.value : '16:00';
-      let endTime = endInput ? endInput.value : '21:00';
-
-      if (timeToMinutes(endTime) <= timeToMinutes(startTime)) {
-        const newEndMin = Math.min(timeToMinutes(startTime) + 180, 1439);
-        endTime = minutesToTime(newEndMin);
-        if (endInput) endInput.value = endTime;
+      if (type === 'start') {
+        collabStartTimeMinutes = Math.max(0, Math.min(1380, collabStartTimeMinutes + deltaMinutes));
+        if (collabStartTimeMinutes >= collabEndTimeMinutes) {
+          collabEndTimeMinutes = Math.min(1439, collabStartTimeMinutes + 60);
+        }
+      } else if (type === 'end') {
+        collabEndTimeMinutes = Math.max(30, Math.min(1439, collabEndTimeMinutes + deltaMinutes));
+        if (collabEndTimeMinutes <= collabStartTimeMinutes) {
+          collabStartTimeMinutes = Math.max(0, collabEndTimeMinutes - 60);
+        }
       }
 
+      // If user is currently registered as free today, update the slot dynamically
       const mySlots = AppStore.myCollabSlots || {};
-      mySlots[selectedCollabDay] = { startTime, endTime };
-      AppStore.saveMyCollabSlots(mySlots);
+      if (mySlots[selectedCollabDay]) {
+        const startTime = minutesToTime(collabStartTimeMinutes);
+        const endTime = minutesToTime(collabEndTimeMinutes);
+        mySlots[selectedCollabDay] = { startTime, endTime };
+        AppStore.saveMyCollabSlots(mySlots);
 
-      const friendRange = getSlotTimeRange((AppStore.friendCollabSlots || {})[selectedCollabDay]);
-      const overlap = calculateTimeOverlap({ startTime, endTime }, friendRange);
-      if (overlap) {
-        triggerHaptic('heavy');
-        fireConfetti();
-      } else {
+        // Broadcast to MQTT
+        const roomKey = (AppStore.collabRoomKey || 'FORGE-AZ').trim().toUpperCase();
+        const topic = `studioforge/collab/${roomKey}`;
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(topic, JSON.stringify({
+            app: 'StudioForge',
+            senderId: myDeviceId,
+            roomKey: roomKey,
+            date: selectedCollabDay,
+            timeSlot: { startTime, endTime },
+            allSlots: mySlots,
+            timestamp: Date.now()
+          }), { qos: 1 });
+        }
+      }
+
+      renderCollabCalendar();
+      updateCollabSlotEditor(selectedCollabDay);
+    }
+
+    function toggleMyCollabTimeSlot() {
+      if (!selectedCollabDay) return;
+      const mySlots = AppStore.myCollabSlots || {};
+      const isCurrentlyFree = !!mySlots[selectedCollabDay];
+
+      const roomKey = (AppStore.collabRoomKey || 'FORGE-AZ').trim().toUpperCase();
+      const topic = `studioforge/collab/${roomKey}`;
+
+      if (isCurrentlyFree) {
+        // Toggle OFF (Make busy)
+        delete mySlots[selectedCollabDay];
+        AppStore.saveMyCollabSlots(mySlots);
         triggerHaptic('medium');
-      }
 
-      renderCollabCalendar();
-      updateCollabSlotEditor(selectedCollabDay);
-
-      // Publish via MQTT
-      const roomKey = (AppStore.collabRoomKey || 'FORGE-AZ').trim().toUpperCase();
-      const topic = `studioforge/collab/${roomKey}`;
-
-      if (mqttClient && mqttClient.connected) {
-        const payload = {
-          app: 'StudioForge',
-          senderId: myDeviceId,
-          roomKey: roomKey,
-          date: selectedCollabDay,
-          timeSlot: { startTime, endTime },
-          allSlots: mySlots,
-          timestamp: Date.now()
-        };
-        mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
-        showMobileToast(`تم حفظ تفرغك: من ${formatTimeArabic12h(startTime)} إلى ${formatTimeArabic12h(endTime)} 🚀`);
-      } else {
-        showMobileToast('تم الحفظ محلياً');
-      }
-    }
-
-    function autoSaveCollabTimeSlot() {
-      saveMyCustomTimeSlot();
-    }
-
-    function quickSetCollabTime(start, end) {
-      const startInput = document.getElementById('input-collab-start-time');
-      const endInput = document.getElementById('input-collab-end-time');
-      if (startInput) startInput.value = start;
-      if (endInput) endInput.value = end;
-      saveMyCustomTimeSlot();
-    }
-
-    function clearMyCustomTimeSlot() {
-      if (!selectedCollabDay) return;
-      const mySlots = AppStore.myCollabSlots || {};
-      delete mySlots[selectedCollabDay];
-      AppStore.saveMyCollabSlots(mySlots);
-
-      triggerHaptic('medium');
-      renderCollabCalendar();
-      updateCollabSlotEditor(selectedCollabDay);
-
-      const roomKey = (AppStore.collabRoomKey || 'FORGE-AZ').trim().toUpperCase();
-      const topic = `studioforge/collab/${roomKey}`;
-
-      if (mqttClient && mqttClient.connected) {
-        const payload = {
-          app: 'StudioForge',
-          senderId: myDeviceId,
-          roomKey: roomKey,
-          date: selectedCollabDay,
-          timeSlot: null,
-          allSlots: mySlots,
-          timestamp: Date.now()
-        };
-        mqttClient.publish(topic, JSON.stringify(payload), { qos: 1 });
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(topic, JSON.stringify({
+            app: 'StudioForge',
+            senderId: myDeviceId,
+            roomKey: roomKey,
+            date: selectedCollabDay,
+            timeSlot: null,
+            allSlots: mySlots,
+            timestamp: Date.now()
+          }), { qos: 1 });
+        }
         showMobileToast('تم إلغاء التفرغ لهذا اليوم');
+      } else {
+        // Toggle ON (Set free)
+        const startTime = minutesToTime(collabStartTimeMinutes);
+        const endTime = minutesToTime(collabEndTimeMinutes);
+        mySlots[selectedCollabDay] = { startTime, endTime };
+        AppStore.saveMyCollabSlots(mySlots);
+
+        const friendRange = getSlotTimeRange((AppStore.friendCollabSlots || {})[selectedCollabDay]);
+        const overlap = calculateTimeOverlap({ startTime, endTime }, friendRange);
+        if (overlap) {
+          triggerHaptic('heavy');
+          fireConfetti();
+        } else {
+          triggerHaptic('medium');
+        }
+
+        if (mqttClient && mqttClient.connected) {
+          mqttClient.publish(topic, JSON.stringify({
+            app: 'StudioForge',
+            senderId: myDeviceId,
+            roomKey: roomKey,
+            date: selectedCollabDay,
+            timeSlot: { startTime, endTime },
+            allSlots: mySlots,
+            timestamp: Date.now()
+          }), { qos: 1 });
+        }
+        showMobileToast(`تم تسجيل تفرغك من ${formatTimeMinutesArabic(collabStartTimeMinutes)} إلى ${formatTimeMinutesArabic(collabEndTimeMinutes)}`);
       }
+
+      renderCollabCalendar();
+      updateCollabSlotEditor(selectedCollabDay);
     }
 
     function updateCollabSlotEditor(dateStr) {
@@ -1314,9 +1325,9 @@
       const matchPill = document.getElementById('collab-match-pill-badge');
       const cardEl = document.getElementById('collab-smart-day-card');
       const friendSummaryEl = document.getElementById('collab-friend-time-summary');
-      const startInput = document.getElementById('input-collab-start-time');
-      const endInput = document.getElementById('input-collab-end-time');
-      const btnSave = document.getElementById('btn-collab-save-time');
+      const startDisp = document.getElementById('disp-collab-start-time');
+      const endDisp = document.getElementById('disp-collab-end-time');
+      const btnToggle = document.getElementById('btn-collab-smart-toggle');
 
       if (titleEl) titleEl.textContent = formatArabicDateWithDayName(dateStr);
 
@@ -1325,44 +1336,50 @@
       const overlap = calculateTimeOverlap(myRange, friendRange);
       const isMatch = !!overlap;
 
+      if (myRange) {
+        collabStartTimeMinutes = timeToMinutes(myRange.startTime);
+        collabEndTimeMinutes = timeToMinutes(myRange.endTime);
+      }
+
+      if (startDisp) startDisp.textContent = formatTimeMinutesArabic(collabStartTimeMinutes);
+      if (endDisp) endDisp.textContent = formatTimeMinutesArabic(collabEndTimeMinutes);
+
       if (cardEl) cardEl.classList.toggle('match-active', isMatch);
       if (matchPill) matchPill.style.display = isMatch ? 'inline-block' : 'none';
 
-      // Set input values
-      if (myRange) {
-        if (startInput) startInput.value = myRange.startTime;
-        if (endInput) endInput.value = myRange.endTime;
-        if (btnSave) {
-          btnSave.innerHTML = `<span>✓ أنت متاح (${formatTimeArabic12h(myRange.startTime)} - ${formatTimeArabic12h(myRange.endTime)})</span>`;
-        }
-      } else {
-        if (btnSave) {
-          btnSave.innerHTML = `<span>🟢 سجّل أنك متاح في هذا الوقت</span>`;
+      // Update Single Toggle Button
+      if (btnToggle) {
+        if (myRange) {
+          btnToggle.className = 'collab-smart-toggle-btn state-free';
+          btnToggle.innerHTML = `<span>أنت متاح (من ${formatTimeArabic12h(myRange.startTime)} إلى ${formatTimeArabic12h(myRange.endTime)}) — اضغط للإلغاء</span>`;
+        } else {
+          btnToggle.className = 'collab-smart-toggle-btn state-busy';
+          btnToggle.innerHTML = `<span>تأكيد التفرغ في هذا الوقت</span>`;
         }
       }
 
-      // Update Summary Text
+      // Update Summary Text (No Emojis)
       if (summaryEl) {
         if (overlap) {
-          summaryEl.innerHTML = `<strong style="color: #fbbf24;">🎯 متفرغان معاً من ${overlap.startFormatted} إلى ${overlap.endFormatted} (${overlap.durationText}) 🎬</strong>`;
+          summaryEl.innerHTML = `<strong style="color: #fbbf24;">متفرغان معاً من ${overlap.startFormatted} إلى ${overlap.endFormatted} (${overlap.durationText})</strong>`;
         } else if (myRange && !friendRange) {
-          summaryEl.innerHTML = `<span style="color: #34d399;">🟢 وقتك: من ${formatTimeArabic12h(myRange.startTime)} إلى ${formatTimeArabic12h(myRange.endTime)}</span> • <span style="color: var(--text-muted);">بانتظار خويك</span>`;
+          summaryEl.innerHTML = `<span style="color: #34d399;">أنت متاح من ${formatTimeArabic12h(myRange.startTime)} إلى ${formatTimeArabic12h(myRange.endTime)}</span> • <span style="color: var(--text-muted);">بانتظار الطرف الآخر</span>`;
         } else if (!myRange && friendRange) {
-          summaryEl.innerHTML = `<span style="color: #c084fc;">🟣 خويك متفرغ اليوم! اختر وقتاً مشابهاً للتطابق</span>`;
+          summaryEl.innerHTML = `<span style="color: #c084fc;">الطرف الآخر متاح اليوم، حدد وقتاً مشابهاً للتطابق</span>`;
         } else if (myRange && friendRange) {
-          summaryEl.innerHTML = `<span style="color: var(--text-secondary);">⚠️ لا يوجد وقت مشترك بينكم (أوقاتكم لا تتقاطع)</span>`;
+          summaryEl.innerHTML = `<span style="color: var(--text-secondary);">لا يوجد وقت مشترك بينكما في هذا اليوم</span>`;
         } else {
-          summaryEl.innerHTML = `<span style="color: var(--text-muted);">اختر أوقاتك واضغط "أنا متاح" أو غيّر الوقت مباشرة:</span>`;
+          summaryEl.innerHTML = `<span style="color: var(--text-muted);">اضبط الوقت بالأزرار ثم اضغط تأكيد التفرغ:</span>`;
         }
       }
 
-      // Update Friend Summary Line
+      // Update Friend Summary Line (No Emojis)
       if (friendSummaryEl) {
         if (friendRange) {
-          friendSummaryEl.innerHTML = `🟣 <strong>خويك متاح من:</strong> ${formatTimeArabic12h(friendRange.startTime)} إلى ${formatTimeArabic12h(friendRange.endTime)}`;
+          friendSummaryEl.innerHTML = `<strong>الطرف الآخر متاح من:</strong> ${formatTimeArabic12h(friendRange.startTime)} إلى ${formatTimeArabic12h(friendRange.endTime)}`;
           friendSummaryEl.style.color = '#c084fc';
         } else {
-          friendSummaryEl.innerHTML = `🟣 خويك لم يحدد وقته لهذا اليوم بعد`;
+          friendSummaryEl.innerHTML = `الطرف الآخر لم يحدد وقته لهذا اليوم بعد`;
           friendSummaryEl.style.color = 'var(--text-muted)';
         }
       }
@@ -1409,8 +1426,8 @@
           indicatorsHtml = `
             <div class="cal-collab-indicators">
               <span class="dot-chip me" title="أنا"></span>
-              <span class="dot-chip friend" title="خويي"></span>
-              <span class="dot-chip match-badge">🎯</span>
+              <span class="dot-chip friend" title="الطرف الآخر"></span>
+              <span class="dot-chip match-badge">مشترك</span>
             </div>
           `;
         } else if (isMyFree) {
@@ -1424,7 +1441,7 @@
           cellClass = 'collab-friend-free';
           indicatorsHtml = `
             <div class="cal-collab-indicators">
-              <span class="dot-chip friend" title="خويي متاح"></span>
+              <span class="dot-chip friend" title="الطرف الآخر متاح"></span>
             </div>
           `;
         } else {
@@ -1439,7 +1456,7 @@
         `;
       }
 
-      if (matchesHeader) matchesHeader.textContent = `🎯 الأوقات المشتركة المتطابقة (${matchesCount}):`;
+      if (matchesHeader) matchesHeader.textContent = `الأوقات المشتركة المتطابقة (${matchesCount}):`;
 
       if (matchesList) {
         if (matchesArray.length === 0) {
@@ -1449,14 +1466,14 @@
           matchesList.innerHTML = matchesArray.map(item => `
             <div class="cal-event-item-card" style="border: 1px solid rgba(245, 158, 11, 0.4); background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(16, 185, 129, 0.08));">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">🎯 وقت تصوير متطابق</span>
+                <span class="badge-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.2);">وقت تصوير متطابق</span>
                 <span style="font-size: 11px; font-weight: 800; color: #fff;">${formatArabicDateWithDayName(item.date)}</span>
               </div>
               <div style="font-size: 12px; color: #fbbf24; font-weight: 700; margin-top: 4px;">
                 من ${item.overlap.startFormatted} إلى ${item.overlap.endFormatted} (${item.overlap.durationText})
               </div>
               <button type="button" class="action-btn-pill green" style="margin-top: 6px; padding: 6px; font-size: 11px;" onclick="confirmCollabSession('${item.date}')">
-                <span>🎮 تأكيد موعد جلسة التصوير</span>
+                <span>تأكيد موعد جلسة التصوير</span>
               </button>
             </div>
           `).join('');
@@ -1467,7 +1484,7 @@
     function confirmCollabSession(dateStr) {
       triggerHaptic('heavy');
       fireConfetti();
-      showMobileToast(`تم تأكيد جلسة التصوير ليوم ${formatArabicDateWithDayName(dateStr)}! 🎮`);
+      showMobileToast(`تم تأكيد جلسة التصوير ليوم ${formatArabicDateWithDayName(dateStr)}`);
     }
 
     function promptChangeCollabKey() {
