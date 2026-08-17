@@ -871,112 +871,89 @@ html, body {
   justify-content: space-between;
 }
 
-/* Time Period Grid & Interactive Chips */
-.collab-time-period-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+/* Custom Exact Time Range Picker */
+.collab-custom-time-box {
+  display: flex;
+  align-items: center;
   gap: 8px;
-  margin-top: 4px;
-}
-
-.time-period-chip {
   background: var(--bg-elevated);
   border: 1px solid var(--border-card);
   border-radius: var(--radius-sm);
   padding: 8px 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  font-family: inherit;
-  text-align: right;
-  transition: all var(--transition-fast);
-  position: relative;
-  overflow: hidden;
+  margin-top: 4px;
 }
 
-.time-period-chip .period-icon {
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.time-period-chip .period-info {
+.time-input-group {
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 1px;
+  gap: 4px;
 }
 
-.time-period-chip .period-name {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-primary);
-}
-
-.time-period-chip .period-hours {
+.time-input-label {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-muted);
 }
 
-/* My Active Selected Slot (Green) */
-.time-period-chip.my-active {
+.time-picker-native {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xs);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 6px 8px;
+  text-align: center;
+  font-family: monospace, inherit;
+  outline: none;
+  cursor: pointer;
+  direction: ltr;
+  transition: all var(--transition-fast);
+}
+
+.time-picker-native:focus {
   border-color: #34d399;
-  background: rgba(16, 185, 129, 0.12);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.2);
 }
 
-.time-period-chip.my-active .period-name {
+.time-arrow-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 800;
+  padding-top: 14px;
+}
+
+/* Quick Time Shift Pills */
+.time-quick-pills-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.time-quick-pill {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-pill);
+  padding: 4px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: all var(--transition-fast);
+}
+
+.time-quick-pill:hover, .time-quick-pill:active {
+  background: rgba(52, 211, 153, 0.12);
+  border-color: #34d399;
   color: #34d399;
-}
-
-.time-period-chip.my-active .period-hours {
-  color: #6ee7b7;
-}
-
-/* Friend Available Indicator (Purple Dot/Border) */
-.time-period-chip.friend-active {
-  border-color: rgba(192, 132, 252, 0.6);
-}
-
-.time-period-chip.friend-active::after {
-  content: 'خويك متاح 🟣';
-  position: absolute;
-  top: 2px;
-  left: 4px;
-  font-size: 8px;
-  font-weight: 800;
-  color: #c084fc;
-  background: rgba(192, 132, 252, 0.15);
-  padding: 1px 4px;
-  border-radius: 4px;
-}
-
-/* Perfect Match Slot (Gold Gradient & Highlight) */
-.time-period-chip.matched-slot {
-  border-color: #f59e0b;
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.18));
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
-}
-
-.time-period-chip.matched-slot .period-name {
-  color: #fbbf24;
-}
-
-.time-period-chip.matched-slot::after {
-  content: 'متفرغان معاً 🎯';
-  position: absolute;
-  top: 2px;
-  left: 4px;
-  font-size: 8px;
-  font-weight: 800;
-  color: #fbbf24;
-  background: rgba(245, 158, 11, 0.3);
-  padding: 1px 4px;
-  border-radius: 4px;
-}
-
-.time-period-chip:active {
-  transform: scale(0.97);
 }
 
 /* Inline Room Header Tag */
