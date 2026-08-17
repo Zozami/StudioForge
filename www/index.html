@@ -96,7 +96,7 @@
           <div style="margin-top: 28px; margin-bottom: 8px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px;">
             <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); font-weight: 600; background: var(--bg-card); padding: 4px 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-card);">
               <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #34d399;"></span>
-              <span>استوديو فورج <strong style="color: #fff;" id="txt-home-footer-ver">v1.0.7</strong></span>
+              <span>استوديو فورج <strong style="color: #fff;" class="app-version-badge" id="txt-home-footer-ver">v1.0.8</strong></span>
             </div>
           </div>
         </section>
@@ -290,7 +290,7 @@
           <!-- Update & Data Controls -->
           <div style="display: flex; gap: 8px; margin-top: 16px;">
             <button type="button" class="action-btn-pill gray" style="flex: 1; font-size: 11px; padding: 8px;" onclick="checkManualOtaUpdate()">
-              <span>🔄 فحص التحديثات (<span id="txt-app-current-ver">v1.0.7</span>)</span>
+              <span>🔄 فحص التحديثات (<span class="app-version-badge" id="txt-app-current-ver">v1.0.8</span>)</span>
             </button>
             <button type="button" class="action-btn-pill danger" style="flex: 1; font-size: 11px; padding: 8px;" onclick="clearAllUserData()">
               <span>مسح كل البيانات</span>
@@ -800,14 +800,22 @@
         }
       }
 
-      const storedVer = localStorage.getItem(STORAGE_KEY_APP_VER);
-      if (!storedVer || compareSemver(APP_BASE_VERSION, storedVer) > 0) {
-        localStorage.setItem(STORAGE_KEY_APP_VER, APP_BASE_VERSION);
+      // 2. Dynamically fetch local bundle version.json (Single Source of Truth)
+      try {
+        const localManifest = await fetch('version.json?t=' + Date.now(), { cache: 'no-store' });
+        if (localManifest.ok) {
+          const json = await localManifest.json();
+          if (json && json.version) {
+            localStorage.setItem(STORAGE_KEY_APP_VER, json.version);
+          }
+        }
+      } catch (e) {
+        console.warn('Local version.json read fallback:', e);
       }
 
       syncAllVersionBadges();
 
-      // 2. Run silent background check after 2 seconds
+      // 3. Run silent background check after 2 seconds
       setTimeout(checkOtaUpdatesSilently, 2000);
     }
 
@@ -935,6 +943,13 @@
         if (num1 < num2) return -1;
       }
       return 0;
+    }
+
+    function syncAllVersionBadges(ver) {
+      const v = ver || localStorage.getItem(STORAGE_KEY_APP_VER) || '1.0.8';
+      document.querySelectorAll('.app-version-badge, #txt-home-footer-ver, #txt-app-current-ver').forEach(el => {
+        el.textContent = `v${v}`;
+      });
     }
 
     /* ==========================================================================

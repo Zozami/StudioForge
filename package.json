@@ -4,7 +4,7 @@
   "description": "StudioForge - Mobile Creator OS for Video Production",
   "main": "index.html",
   "scripts": {
-    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('www')) fs.mkdirSync('www'); fs.copyFileSync('index.html','www/index.html'); fs.copyFileSync('styles.css','www/styles.css'); if(fs.existsSync('mqtt.min.js')) fs.copyFileSync('mqtt.min.js','www/mqtt.min.js');\"",
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('www')) fs.mkdirSync('www'); fs.copyFileSync('index.html','www/index.html'); fs.copyFileSync('styles.css','www/styles.css'); if(fs.existsSync('version.json')) fs.copyFileSync('version.json','www/version.json'); if(fs.existsSync('mqtt.min.js')) fs.copyFileSync('mqtt.min.js','www/mqtt.min.js');\"",
     "cap:sync": "npm run build && npx cap sync android",
     "cap:run": "npm run build && npx cap sync && npx cap run android",
     "cap:open": "npm run build && npx cap sync && npx cap open android",
