@@ -8,7 +8,8 @@
     "cap:sync": "npm run build && npx cap sync android",
     "cap:run": "npm run build && npx cap sync && npx cap run android",
     "cap:open": "npm run build && npx cap sync && npx cap open android",
-    "patch:build": "npm run build && powershell -Command \"if (!(Test-Path 'patches')) { New-Item -ItemType Directory -Path 'patches' }; Compress-Archive -Path 'www\\*' -DestinationPath ('patches\\patch-v' + (Get-Content version.json | ConvertFrom-Json).version + '.zip') -Force; Write-Host 'Patch zip generated in patches/ directory!'\""
+    "patch:build": "npm run build && powershell -Command \"if (!(Test-Path 'patches')) { New-Item -ItemType Directory -Path 'patches' }; Compress-Archive -Path 'www\\*' -DestinationPath ('patches\\patch-v' + (Get-Content version.json | ConvertFrom-Json).version + '.zip') -Force; Write-Host 'Patch zip generated in patches/ directory!'\"",
+    "apk:build": "npm run cap:sync && cd android && .\\gradlew.bat assembleDebug && cd .. && powershell -Command \"Copy-Item 'android\\app\\build\\outputs\\apk\\debug\\app-debug.apk' -Destination 'StudioForge-latest.apk' -Force; Write-Host 'APK generated as StudioForge-latest.apk'\""
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
